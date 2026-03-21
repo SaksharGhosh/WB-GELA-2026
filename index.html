@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>WB GELA 2026</title>
+
+<!-- PWA Meta Tags -->
+<meta name="application-name" content="WB GELA 2026">
+<meta name="description" content="West Bengal General Election Logistics & Arrangements 2026">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GELA 2026">
+
+<!-- PWA Manifest (inline via data URI) -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e; --ink-light: #3d3d5c;
+    --paper: #f5f0e8; --paper-dark: #ede6d6;
+    --accent: #8b1a1a; --gold: #b8860b;
+    --border: #c8b89a; --check-bg: #f9f5ef;
+    --shadow: rgba(26,26,46,0.12);
+    --green: #1a5c2e; --green-light: #e8f5ec;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'EB Garamond', Georgia, serif; background: var(--paper); color: var(--ink); font-size: 16px; }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: var(--ink); color: var(--paper);
+    padding: 14px 28px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .app-header h1 { font-size: 1.35rem; font-weight: 700; color: #f5ead0; letter-spacing: .04em; }
+  .app-header p  { font-size: .8rem; font-family: 'DM Mono', monospace; color: #9a8f7a; margin-top: 1px; }
+  .save-global   { font-size: .8rem; font-family: 'DM Mono', monospace; color: #7ec896; opacity: 0; transition: opacity .3s; }
+  .save-global.on { opacity: 1; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    background: var(--paper-dark); border-bottom: 1px solid var(--border);
+    padding: 8px 20px; display: flex; align-items: center; overflow-x: auto;
+    position: sticky; top: 52px; z-index: 100;
+  }
+  .progress-steps { display: flex; flex: 1; min-width: max-content; }
+  .step { flex: 1; position: relative; display: flex; align-items: center; cursor: pointer; min-width: 60px; }
+  .step::after { content: ''; position: absolute; top: 50%; left: 50%; right: -50%; height: 2px; background: var(--border); z-index: 0; transform: translateY(-50%); }
+  .step:last-child::after { display: none; }
+  .step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid var(--border); background: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace; font-size: .72rem; font-weight: 600;
+    color: var(--ink-light); position: relative; z-index: 1; transition: all .2s; flex-shrink: 0;
+  }
+  .step.active .step-dot { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 0 3px rgba(139,26,26,.18); }
+  .step.done   .step-dot { background: var(--green);  border-color: var(--green);  color: #fff; }
+  .step.done::after { background: var(--green); }
+  .step-label { font-size: .68rem; font-family: 'DM Mono', monospace; color: var(--ink-light); margin-left: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
+  .step.active .step-label { color: var(--accent); font-weight: 600; }
+
+  /* ── MAIN ── */
+  .main { max-width: 794px; margin: 0 auto; padding: 28px 20px 60px; }
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn .2s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+
+  /* ── PAGE HEADER ── */
+  .page-title { border-left: 5px solid var(--accent); padding: 4px 0 4px 14px; margin-bottom: 22px; }
+  .page-title h2 { font-size: 1.6rem; font-weight: 700; }
+  .page-title .sub { font-size: .82rem; font-family: 'DM Mono', monospace; color: var(--gold); margin-top: 3px; letter-spacing: .06em; font-weight: 500; }
+
+  /* ── CARD ── */
+  .card { background: #fff; border: 1px solid var(--border); border-radius: 5px; padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 1px 4px var(--shadow); }
+  .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--paper-dark); display: flex; align-items: center; gap: 8px; }
+  .ps-badge { font-family: 'DM Mono', monospace; font-size: .75rem; font-weight: 600; background: var(--ink); color: var(--paper); padding: 2px 7px; border-radius: 3px; }
+
+  /* ── BANNER ── */
+  .banner { background: var(--ink); color: var(--paper); border-radius: 5px; padding: 12px 18px; margin-bottom: 16px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .banner .stat .lbl { font-family: 'DM Mono', monospace; font-size: .72rem; font-weight: 500; color: #9a8f7a; letter-spacing: .1em; text-transform: uppercase; }
+  .banner .stat .val { font-size: 1.6rem; font-weight: 700; color: #f5ead0; line-height: 1; margin-top: 1px; }
+  .banner .stat .val.hi { color: #e8a87c; }
+
+  /* ── TABLES ── */
+  table.data { width: 100%; border-collapse: collapse; font-size: 1rem; border: 2px solid var(--border); }
+  table.data thead th { background: var(--ink); color: var(--paper); font-family: 'DM Mono', monospace; font-size: .72rem; font-weight: 600; letter-spacing: .07em; padding: 9px 10px; text-align: center; border: 1px solid #2e2e4a; }
+  table.data thead th.left { text-align: left; }
+  table.data tbody tr { border-bottom: 1px solid var(--border); }
+  table.data tbody tr:hover { background: var(--check-bg); }
+  table.data td { padding: 8px 10px; vertical-align: middle; font-size: 1rem; border: 1px solid var(--border); }
+  table.data td.mono { font-family: 'DM Mono', monospace; font-size: .85rem; font-weight: 600; color: var(--ink-light); text-align: center; border: 1px solid var(--border); }
+  table.data tfoot td { background: var(--paper-dark); font-weight: 700; font-family: 'DM Mono', monospace; font-size: .82rem; padding: 9px 10px; border-top: 2px solid var(--border); border: 1px solid var(--border); }
+
+  /* ── INPUTS ── */
+  input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], select {
+    width: 100%; padding: 7px 9px; border: 1px solid var(--border); border-radius: 3px;
+    background: var(--paper); font-family: 'EB Garamond', serif; font-size: 1rem; font-weight: 600; color: var(--ink);
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(139,26,26,.1); background: #fff; }
+  table.data input, table.data select { border: none; background: transparent; font-family: 'DM Mono', monospace; font-size: .88rem; font-weight: 500; text-align: center; padding: 4px 2px; width: 100%; }
+  table.data input:focus, table.data select:focus { background: #fffbf0; outline: 1px solid var(--gold); }
+  table.data input.ltext, table.data select.ltext { text-align: left; font-family: 'EB Garamond', serif; font-size: 1rem; font-weight: 600; }
+  table.data input.total { color: var(--accent); font-weight: 700; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; }
+  .checklist li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-radius: 4px; margin-bottom: 5px; background: var(--check-bg); border: 1px solid transparent; transition: all .15s; cursor: pointer; }
+  .checklist li:hover { border-color: var(--border); background: var(--paper-dark); }
+  .checklist li.checked { background: var(--green-light); border-color: rgba(26,92,46,.2); }
+  .checklist li input[type="checkbox"] { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--green); flex-shrink: 0; cursor: pointer; }
+  .checklist li span { font-size: 1.05rem; font-weight: 600; line-height: 1.45; }
+  .checklist li.checked span { color: var(--green); }
+
+  /* ── AMF RADIO ── */
+  .rg { display: flex; gap: 14px; justify-content: center; }
+  .rg label { display: flex; align-items: center; gap: 5px; font-size: .9rem; font-weight: 600; font-family: 'DM Mono', monospace; cursor: pointer; }
+  .rg label.yes { color: var(--green); } .rg label.yes input { accent-color: var(--green); }
+  .rg label.no  { color: var(--accent); } .rg label.no  input { accent-color: var(--accent); }
+
+  /* ── FIELD ROW ── */
+  .field-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .field-row label { font-family: 'DM Mono', monospace; font-size: .76rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-light); white-space: nowrap; }
+  .field-row input, .field-row select { max-width: 280px; }
+
+  /* ── SUBSECTION ── */
+  .subsec-title { font-family: 'DM Mono', monospace; font-size: .76rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--paper); background: var(--ink-light); padding: 7px 12px; border-radius: 3px; margin: 18px 0 10px; }
+  .subsec-divider { border-top: 2px dashed var(--border); margin: 22px 0 8px; }
+  .chg-table-wrap { overflow-x: auto; }
+  .chg-table th { font-size: .68rem; font-weight: 600; padding: 6px 5px; line-height: 1.3; }
+  .chg-table td { font-size: .9rem; font-weight: 500; padding: 6px 5px; }
+
+  /* ── MOCK POLL TABLE ── */
+  .mock-table { width: 100%; border-collapse: collapse; font-size: .95rem; border: 2px solid var(--border); }
+  .mock-table th { background: var(--ink); color: var(--paper); font-family: 'DM Mono', monospace; font-size: .7rem; font-weight: 600; letter-spacing: .06em; padding: 8px 5px; text-align: center; border: 1px solid #2e2e4a; }
+  .mock-table th.left { text-align: left; }
+  .mock-table td { padding: 7px 6px; border: 1px solid var(--border); vertical-align: middle; text-align: center; }
+  .mock-table td.item-label { text-align: left; font-size: 1rem; font-weight: 600; line-height: 1.4; }
+  .mock-table tbody tr:hover { background: var(--check-bg); }
+  .mock-table select, .mock-table input[type="number"] { width: 100%; border: none; background: transparent; font-family: 'EB Garamond', serif; font-size: .95rem; font-weight: 600; text-align: center; padding: 3px 2px; }
+  .mock-table select:focus, .mock-table input:focus { background: #fffbf0; outline: 1px solid var(--gold); }
+  /* Mobile mock: stacked cards */
+  .mock-cards { display: none; }
+  .mock-card { background: #fff; border: 1px solid var(--border); border-radius: 5px; margin-bottom: 10px; overflow: hidden; }
+  .mock-card-title { background: var(--ink); color: var(--paper); font-size: .88rem; font-weight: 700; padding: 8px 12px; line-height: 1.3; }
+  .mock-card-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .mock-card-cell { padding: 8px 10px; border-bottom: 1px solid var(--paper-dark); border-right: 1px solid var(--paper-dark); }
+  .mock-card-cell:nth-child(even) { border-right: none; }
+  .mock-card-cell .ps-label { font-family: 'DM Mono', monospace; font-size: .68rem; font-weight: 600; color: var(--gold); letter-spacing: .06em; margin-bottom: 4px; }
+  .mock-card-cell select, .mock-card-cell input { width: 100%; border: 1px solid var(--border); border-radius: 3px; background: var(--paper); font-family: 'EB Garamond', serif; font-size: 1rem; font-weight: 600; padding: 6px 7px; }
+  @media (max-width: 600px) { .mock-table-wrap { display: none; } .mock-cards { display: block; } }
+
+  /* ── VOTER TURNOUT ── */
+  .vt-table { border-collapse: collapse; font-size: .88rem; min-width: 100%; border: 2px solid var(--border); }
+  .vt-table th { background: var(--ink); color: var(--paper); font-family: 'DM Mono', monospace; font-size: .65rem; font-weight: 600; padding: 6px 4px; text-align: center; border: 1px solid #2a2a45; white-space: nowrap; }
+  .vt-table th.vt-corner { min-width: 72px; text-align: left; padding-left: 7px; font-size: .7rem; }
+  .vt-table th.vt-ps-hd { background: var(--accent); font-size: .7rem; }
+  .vt-table td { border: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; }
+  .vt-table td.vt-lbl { text-align: left; padding: 6px 8px; background: var(--paper-dark); font-family: 'DM Mono', monospace; font-size: .76rem; font-weight: 700; color: var(--ink-light); border: 1px solid var(--border); }
+  .vt-table tr.vt-tot-row td { background: #f0ebe0; }
+  .vt-table tr.vt-tot-row td.vt-lbl { background: var(--ink); color: var(--paper); }
+  .vt-table input { width: 100%; min-width: 28px; border: none; background: transparent; font-family: 'DM Mono', monospace; font-size: .82rem; font-weight: 600; text-align: center; padding: 5px 2px; color: var(--ink); }
+  .vt-table input:focus { background: #fffbf0; outline: 1px solid var(--gold); }
+  .vt-table input.ro-tot   { color: var(--accent); font-weight: 700; background: #fff8f0; pointer-events: none; }
+  .vt-table input.ro-grand { color: var(--green);  font-weight: 700; background: #edf7ef; pointer-events: none; }
+  /* Mobile: PS picker + slim table */
+  .vt-mobile { display: none; }
+  .vt-desktop { display: block; }
+  .vt-mob-table { border-collapse: collapse; width: 100%; }
+  .vt-mob-table th { background: var(--ink); color: var(--paper); font-family: 'DM Mono', monospace; font-size: .76rem; font-weight: 600; padding: 9px 6px; text-align: center; border: 1px solid #2a2a45; }
+  .vt-mob-table th.left { text-align: left; padding-left: 10px; }
+  .vt-mob-table td { border: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; }
+  .vt-mob-table td.vt-lbl { text-align: left; padding: 9px 10px; background: var(--paper-dark); font-family: 'DM Mono', monospace; font-size: .8rem; font-weight: 700; color: var(--ink-light); }
+  .vt-mob-table tr.vt-tot-row td { background: #f0ebe0; }
+  .vt-mob-table tr.vt-tot-row td.vt-lbl { background: var(--ink); color: var(--paper); }
+  .vt-mob-table input { width: 100%; border: none; background: transparent; font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 600; text-align: center; padding: 9px 4px; }
+  .vt-mob-table input:focus { background: #fffbf0; outline: 1px solid var(--gold); }
+  .vt-mob-table input.ro-tot   { color: var(--accent); font-weight: 700; background: #fff8f0; pointer-events: none; }
+  .vt-mob-table input.ro-grand { color: var(--green);  font-weight: 700; background: #edf7ef; pointer-events: none; }
+  @media (max-width: 680px) { .vt-desktop { display: none; } .vt-mobile { display: block; } }
+
+  /* ── AMF VISITS ── */
+  .amf-visit {
+    background: #fff; border: 1px solid var(--border); border-radius: 5px;
+    margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 4px var(--shadow);
+  }
+  .amf-visit-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; cursor: pointer;
+    background: var(--ink); color: var(--paper);
+    gap: 10px;
+  }
+  .amf-visit-header:hover { background: #2a2a4a; }
+  .amf-visit-title {
+    font-family: 'DM Mono', monospace; font-size: .82rem;
+    font-weight: 600; letter-spacing: .06em;
+  }
+  .amf-visit-meta { font-size: .7rem; color: #9a8f7a; font-family: 'DM Mono', monospace; }
+  .amf-visit-chevron { font-size: .9rem; transition: transform .2s; flex-shrink: 0; }
+  .amf-visit.collapsed .amf-visit-chevron { transform: rotate(-90deg); }
+  .amf-visit-body { padding: 14px 12px 8px; }
+  .amf-visit.collapsed .amf-visit-body { display: none; }
+  .amf-visit-actions { display: flex; gap: 8px; align-items: center; }
+  .btn-del-visit {
+    background: transparent; border: 1px solid rgba(139,26,26,.4);
+    color: var(--accent); border-radius: 3px; font-size: .72rem;
+    padding: 3px 9px; cursor: pointer; font-family: 'DM Mono', monospace;
+    transition: all .15s;
+  }
+  .btn-del-visit:hover { background: var(--accent); color: #fff; }
+
+  /* ── AMF PAIR LAYOUT ── */
+  .amf-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .amf-pair .card { margin-bottom: 0; }
+  @media (max-width: 760px) {
+    .amf-pair { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 420px) {
+    .amf-pair { grid-template-columns: 1fr; }
+  }
+
+  /* ── BUTTONS ── */
+  .buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border); gap: 8px; flex-wrap: wrap; }
+  .btn { padding: 8px 20px; border-radius: 4px; font-family: 'EB Garamond', serif; font-size: .97rem; cursor: pointer; border: none; transition: all .15s; }
+  .btn-primary   { background: var(--ink);    color: var(--paper); }
+  .btn-primary:hover   { background: var(--accent); }
+  .btn-secondary { background: #fff; color: var(--ink); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--ink); }
+  .btn-danger    { background: #fff; color: var(--accent); border: 1px solid rgba(139,26,26,.3); font-size: .82rem; padding: 6px 12px; }
+  .btn-danger:hover    { background: #fdf5f5; }
+  .btn-print     { background: var(--green); color: #fff; }
+  .btn-print:hover     { background: #14492a; }
+  .btn-undo { background: #fff; color: var(--gold); border: 1px solid rgba(184,134,11,.4); font-size: .82rem; padding: 6px 12px; border-radius: 4px; font-family: 'EB Garamond', serif; cursor: pointer; transition: all .15s; }
+  .btn-undo:hover { background: #fffbf0; border-color: var(--gold); }
+  .btn-undo:disabled { opacity: .35; cursor: not-allowed; }
+  .save-ind { font-size: .7rem; font-family: 'DM Mono', monospace; color: var(--green); opacity: 0; transition: opacity .3s; }
+  .save-ind.on { opacity: 1; }
+
+  /* ── PRINT ── */
+  @media print {
+    @page { size: A4 portrait; margin: 8mm 8mm; }
+
+    .app-header, .progress-wrap, .buttons, .banner, .vt-mobile, .mock-cards { display: none !important; }
+    .vt-desktop { display: block !important; overflow: visible !important; }
+    .mock-table-wrap { display: block !important; }
+
+    html, body {
+      background: #fff !important; color: #000;
+      font-size: 20pt;
+      font-weight: 600;
+      font-family: 'EB Garamond', Georgia, serif;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .main { max-width: 100%; padding: 0; margin: 0; }
+
+    /* All pages visible, continuous flow */
+    .page { display: block !important; page-break-after: auto; break-after: auto; page-break-inside: avoid; break-inside: avoid; }
+
+    /* Section separators */
+    .page-title {
+      border-left: 4pt solid #000; padding: 3pt 0 3pt 8pt; margin-bottom: 10pt;
+      margin-top: 14pt; border-top: 2pt solid #000; padding-top: 10pt;
+    }
+    .page:first-of-type .page-title { border-top: none; margin-top: 0; padding-top: 3pt; }
+    .page-title h2 { font-size: 24pt; font-weight: 800; }
+    .page-title .sub { font-size: 20pt; font-weight: 600; color: #444; margin-top: 1pt; }
+
+    /* Cards */
+    .card { box-shadow: none !important; border: 1pt solid #aaa; padding: 6pt 8pt; margin-bottom: 6pt; border-radius: 0; break-inside: avoid; }
+    .card-title { font-size: 20pt; font-weight: 800; padding-bottom: 3pt; margin-bottom: 5pt; border-bottom: 1.5pt solid #888; }
+    .ps-badge { background: #222 !important; color: #fff !important; font-size: 20pt; font-weight: 700; padding: 1pt 4pt; }
+
+    /* Standard data tables */
+    table.data { font-size: 20pt; font-weight: 600; table-layout: auto; border-collapse: collapse; width: 100%; border: 2pt solid #000; word-wrap: break-word; overflow-wrap: break-word; }
+    table.data thead th {
+      background: #1a1a2e !important; color: #fff !important;
+      font-size: 20pt; font-weight: 700; padding: 5pt 6pt; line-height: 1.25;
+      white-space: normal; word-wrap: break-word; overflow-wrap: break-word;
+      border: 1pt solid #2e2e4a; width: auto;
+    }
+    table.data thead th.left { text-align: left; }
+    table.data td { padding: 5pt 6pt; font-size: 20pt; font-weight: 600; vertical-align: middle; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; border: 1pt solid #888; width: auto; }
+    table.data td.mono { font-size: 20pt; font-weight: 700; white-space: normal; border: 1pt solid #888; width: auto; }
+    table.data tfoot td { background: #e0e0e0 !important; font-size: 20pt; font-weight: 800; padding: 5pt 6pt; white-space: normal; border: 1pt solid #888; }
+    table.data tbody tr:nth-child(even) { background: #f5f5f5 !important; }
+    table { page-break-inside: auto; } tr { page-break-inside: avoid; }
+
+    /* Override any inline width styles on th/td */
+    table.data th[style], table.data td[style] { width: auto !important; min-width: 0 !important; max-width: none !important; }
+    .mock-table th[style], .mock-table td[style] { width: auto !important; }
+    .vt-table th[style], .vt-table td[style]   { width: auto !important; }
+    .chg-table th[style], .chg-table td[style] { width: auto !important; }
+
+    /* INPUTS — plain text, no underline, no blank space */
+    input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], select {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      font-size: 20pt;
+      font-weight: 600;
+      font-family: 'EB Garamond', Georgia, serif;
+      -webkit-appearance: none; appearance: none;
+      width: 100%;
+    }
+    table.data input, table.data select {
+      font-size: 20pt !important;
+      font-weight: 600 !important;
+      border: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+    }
+    table.data input.total, table.data input.ro-tot, table.data input.ro-grand {
+      font-weight: 800 !important;
+    }
+
+    /* AMF visits */
+    .amf-visit { border: 1pt solid #999; margin-bottom: 8pt; break-inside: avoid; }
+    .amf-visit.collapsed .amf-visit-body { display: block !important; }
+    .amf-visit-header { background: #1a1a2e !important; color: #fff !important; padding: 5pt 8pt; }
+    .amf-visit-title { font-size: 20pt; font-weight: 700; }
+    .amf-visit-actions, .amf-visit-chevron { display: none; }
+    .amf-visit-body { padding: 6pt 6pt 4pt; }
+
+    /* AMF 4-column grid */
+    .amf-pair { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 4pt; margin-bottom: 6pt; }
+    .amf-pair .card { margin-bottom: 0; break-inside: avoid; }
+
+    /* Checklist */
+    .checklist li { background: transparent !important; border: none; padding: 4pt 0; margin-bottom: 1pt; }
+    .checklist li span { font-size: 20pt; font-weight: 600; color: #000 !important; }
+    .checklist li input[type="checkbox"] { width: 14pt; height: 14pt; }
+
+    /* AMF radios */
+    .rg label { font-size: 20pt; font-weight: 700; color: #000 !important; }
+    tr.amf-sep td { padding: 1.5pt !important; background: #ddd !important; }
+
+    /* EVM subsections */
+    .subsec-title { background: #333 !important; color: #fff !important; font-size: 20pt; font-weight: 700; padding: 3pt 6pt; margin: 6pt 0 4pt; }
+    .subsec-divider { border-top: 1pt dashed #bbb; margin: 6pt 0; }
+    .field-row label { font-size: 20pt; font-weight: 700; }
+    .chg-table th { font-size: 20pt !important; font-weight: 700 !important; padding: 4pt 5pt !important; line-height: 1.3; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
+    .chg-table td { font-size: 20pt !important; font-weight: 600 !important; padding: 4pt 5pt !important; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
+
+    /* Mock Poll table */
+    .mock-table { font-size: 20pt; font-weight: 600; border: 2pt solid #000; border-collapse: collapse; table-layout: auto; width: 100%; }
+    .mock-table th { font-size: 20pt; font-weight: 700; padding: 5pt 5pt; background: #1a1a2e !important; color: #fff !important; white-space: normal; word-wrap: break-word; border: 1pt solid #2e2e4a; width: auto; }
+    .mock-table td { padding: 4pt 5pt; font-size: 20pt; white-space: normal; word-wrap: break-word; border: 1pt solid #888; width: auto; }
+    .mock-table td.item-label { font-size: 20pt; font-weight: 700; white-space: normal; word-wrap: break-word; }
+    .mock-table select, .mock-table input { font-size: 20pt !important; font-weight: 600 !important; border: none !important; background: transparent !important; padding: 0 !important; }
+
+    /* Voter Turnout table */
+    .vt-table { font-size: 20pt; font-weight: 600; border: 2pt solid #000; border-collapse: collapse; table-layout: auto; width: 100%; }
+    .vt-table th { font-size: 20pt; font-weight: 700; padding: 4pt 3pt; background: #1a1a2e !important; color: #fff !important; white-space: normal; word-wrap: break-word; border: 1pt solid #2e2e4a; width: auto; }
+    .vt-table th.vt-ps-hd { background: #8b1a1a !important; }
+    .vt-table td { padding: 2pt 2pt; white-space: normal; word-wrap: break-word; border: 1pt solid #888; width: auto; }
+    .vt-table td.vt-lbl { font-size: 20pt; font-weight: 800; padding: 4pt 5pt; background: #ede6d6 !important; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
+    .vt-table tr.vt-tot-row td { background: #f0ebe0 !important; }
+    .vt-table tr.vt-tot-row td.vt-lbl { background: #1a1a2e !important; color: #fff !important; }
+    .vt-table input { font-size: 20pt !important; font-weight: 600 !important; border: none !important; background: transparent !important; padding: 2pt 1pt !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div><h1>WB GELA 2026</h1><p>GENERAL ELECTION — LOGISTICS &amp; ARRANGEMENTS</p></div>
+  <span class="save-global" id="saveGlobal">✓ Saved</span>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-steps" id="progressSteps"></div>
+</div>
+
+<div class="main">
+<form id="mainForm" autocomplete="off">
+
+<!-- ══ PAGE 1: DOCUMENTS ══ -->
+<div class="page active" data-page="0">
+  <div class="page-title"><h2>Documents Checklist</h2><div class="sub">TO BE COLLECTED FROM RO / DEO</div></div>
+  <div class="banner"><div class="stat"><div class="lbl">Collected</div><div class="val" id="checkCount">0</div></div><div class="stat"><div class="lbl">Remaining</div><div class="val hi" id="checkRemain">13</div></div></div>
+  <div class="card">
+    <ul class="checklist" id="docChecklist">
+      <li data-idx="0"><input type="checkbox"><span>Training input being given to PrO, PO &amp; BLO</span></li>
+      <li data-idx="1"><input type="checkbox"><span>Electoral role of each PS</span></li>
+      <li data-idx="2"><input type="checkbox"><span>PS wise AMF (last updated)</span></li>
+      <li data-idx="3"><input type="checkbox"><span>Voter turnout in last 2 general elections</span></li>
+      <li data-idx="4"><input type="checkbox"><span>Elector gender ratio</span></li>
+      <li data-idx="5"><input type="checkbox"><span>MCC violation cases in last 2 general elections</span></li>
+      <li data-idx="6"><input type="checkbox"><span>Route map of the area</span></li>
+      <li data-idx="7"><input type="checkbox"><span>Movement plan &amp; route chart</span></li>
+      <li data-idx="8"><input type="checkbox"><span>List of notified PS in the area</span></li>
+      <li data-idx="9"><input type="checkbox"><span>Details about the voter helpline existing in the sector</span></li>
+      <li data-idx="10"><input type="checkbox"><span>Reserve EVMs</span></li>
+      <li data-idx="11"><input type="checkbox"><span>VM-1 report generated by DEO</span></li>
+      <li data-idx="12"><input type="checkbox"><span>Copy of VM-SO (2 &amp; 3) which was submitted to RO/DEO</span></li>
+    </ul>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(0)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save0">✓ Saved</span><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 2: VOTERS ══ -->
+<div class="page" data-page="1">
+  <div class="page-title"><h2>Number of Voters</h2><div class="sub">POLLING STATION WISE BREAKDOWN</div></div>
+  <div class="banner">
+    <div class="stat"><div class="lbl">Total</div><div class="val" id="grandTotal">—</div></div>
+    <div class="stat"><div class="lbl">Male</div><div class="val hi" id="grandMale">—</div></div>
+    <div class="stat"><div class="lbl">Female</div><div class="val hi" id="grandFemale">—</div></div>
+    <div class="stat"><div class="lbl">3rd</div><div class="val hi" id="grandTG">—</div></div>
+  </div>
+  <div class="card">
+    <table class="data">
+      <thead><tr><th class="left">PS No. &amp; Name</th><th>Male</th><th>Female</th><th>Third Gender</th><th>Total</th></tr></thead>
+      <tbody id="votersTbody"></tbody>
+      <tfoot><tr><td>GRAND TOTAL</td><td id="ftMale">—</td><td id="ftFemale">—</td><td id="ftTG">—</td><td id="ftTotal">—</td></tr></tfoot>
+    </table>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(1)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save1">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 3: AMF ══ -->
+<div class="page" data-page="2">
+  <div class="page-title"><h2>Assured Minimum Facilities</h2><div class="sub">AMF STATUS — POLLING STATION WISE</div></div>
+
+  <!-- Add new visit bar -->
+  <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <label style="font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-light);white-space:nowrap;">New Visit Date</label>
+      <input type="date" id="amfNewDate" style="max-width:180px;">
+    </div>
+    <button type="button" class="btn btn-primary" onclick="addAMFVisit()" style="white-space:nowrap;">+ Add Visit</button>
+  </div>
+
+  <!-- Visits container — populated by JS -->
+  <div id="amfVisitsContainer"></div>
+
+  <div class="buttons">
+    <div class="btn-group"></div>
+    <div class="btn-group"><span class="save-ind" id="save2">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 4: CONTACTS ══ -->
+<div class="page" data-page="3">
+  <div class="page-title"><h2>Important Contacts</h2><div class="sub">KEY PERSONNEL &amp; INFRASTRUCTURE</div></div>
+  <div class="card">
+    <div class="card-title">General</div>
+    <table class="data">
+      <thead><tr><th class="left" style="width:200px">Role</th><th class="left">Name</th><th class="left">Number</th></tr></thead>
+      <tbody>
+        <tr><td>RO (Returning Officer)</td><td><input type="text" data-key="c_ro_name" class="ltext" placeholder="Name"></td><td><input type="text" data-key="c_ro_num" class="ltext" placeholder="Number"></td></tr>
+        <tr><td>Hospital</td><td><input type="text" data-key="c_hospital_name" class="ltext" placeholder="Name"></td><td><input type="text" data-key="c_hospital_num" class="ltext" placeholder="Number"></td></tr>
+        <tr><td>IC of Nimta PS</td><td><input type="text" data-key="c_ic_nimta_name" class="ltext" placeholder="Name"></td><td><input type="text" data-key="c_ic_nimta_num" class="ltext" placeholder="Number"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Infrastructure &amp; Support Contacts</div>
+    <table class="data"><thead id="venueHead"></thead><tbody id="venueTbody"></tbody></table>
+  </div>
+  <div class="card">
+    <div class="card-title">Presiding Officers &amp; 1st Polling Officers</div>
+    <table class="data"><thead><tr><th>PS No.</th><th>PrO Name</th><th>PrO Number</th><th>1st PO Name</th><th>1st PO Number</th></tr></thead><tbody id="officersTbody"></tbody></table>
+  </div>
+  <div class="card">
+    <div class="card-title">Booth Level Officers (BLO)</div>
+    <table class="data"><thead><tr><th>PS No.</th><th>BLO Name</th><th>BLO Number</th></tr></thead><tbody id="bloTbody"></tbody></table>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(3)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save3">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 5: PRE-POLL ══ -->
+<div class="page" data-page="4">
+  <div class="page-title"><h2>Pre-Poll Responsibilities</h2><div class="sub">CHECKLIST — VERIFY BEFORE POLLING DAY</div></div>
+  <div class="card">
+    <table class="data">
+      <thead><tr><th style="width:44px">Sl.</th><th style="width:36px">✓</th><th class="left">Item</th><th style="width:110px">Status</th><th style="width:180px">Remarks</th></tr></thead>
+      <tbody id="prePollBody"></tbody>
+    </table>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(4)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save4">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 6: POLL-EVE ══ -->
+<div class="page" data-page="5">
+  <div class="page-title"><h2>Poll-Eve Responsibilities</h2><div class="sub">CHECKLIST — VERIFY ON THE EVE OF POLLING</div></div>
+  <div class="card">
+    <table class="data">
+      <thead><tr><th style="width:44px">Sl.</th><th style="width:36px">✓</th><th class="left">Item</th><th style="width:110px">Status</th><th style="width:180px">Remarks</th></tr></thead>
+      <tbody id="pollEveBody"></tbody>
+    </table>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(5)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save5">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 7: EVM / VVPAT ══ -->
+<div class="page" data-page="6">
+  <div class="page-title"><h2>Reserve EVM / VVPAT</h2></div>
+  <div class="card">
+    <div class="card-title">Reserve EVM / VVPAT Received</div>
+    <div class="field-row">
+      <label>Date &amp; Time of receiving Reserve EVMs/VVPATs</label>
+      <input type="datetime-local" data-key="evm_recv_datetime">
+    </div>
+    <table class="data">
+      <thead><tr><th style="width:42px">Sl.</th><th>Unique ID — BU</th><th>Unique ID — CU</th><th>Unique ID — VVPAT</th></tr></thead>
+      <tbody id="evmBody"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Change of EVM / VVPAT</div>
+    <div class="subsec-title">At the time of mock poll on poll day</div>
+    <div class="field-row"><label>Date &amp; Time</label><input type="datetime-local" data-key="chg_mock_datetime"></div>
+    <div class="chg-table-wrap">
+      <table class="data chg-table">
+        <thead>
+          <tr><th rowspan="2">Sl.</th><th rowspan="2">No. and name of PS</th><th colspan="3">Unique ID of units replaced</th><th colspan="3">Unique ID of units provided</th></tr>
+          <tr><th>BU</th><th>CU</th><th>VVPAT</th><th>BU</th><th>CU</th><th>VVPAT</th></tr>
+        </thead>
+        <tbody id="chgMockBody"></tbody>
+      </table>
+    </div>
+    <div class="subsec-divider"></div>
+    <div class="subsec-title">At the time of actual poll on poll day</div>
+    <div class="field-row"><label>Date &amp; Time</label><input type="datetime-local" data-key="chg_actual_datetime"></div>
+    <div class="chg-table-wrap">
+      <table class="data chg-table">
+        <thead>
+          <tr><th rowspan="2">Sl.</th><th rowspan="2">No. and name of PS</th><th colspan="3">Unique ID of units replaced</th><th colspan="3">Unique ID of units provided</th></tr>
+          <tr><th>BU</th><th>CU</th><th>VVPAT</th><th>BU</th><th>CU</th><th>VVPAT</th></tr>
+        </thead>
+        <tbody id="chgActualBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Reserve EVM / VVPAT Deposited</div>
+    <div class="field-row">
+      <label>Date &amp; Time of Deposition of the Reserve EVMs/VVPATs</label>
+      <input type="datetime-local" data-key="evm_dep_datetime">
+    </div>
+    <table class="data">
+      <thead><tr><th style="width:42px">Sl.</th><th>Unique ID — BU</th><th>Unique ID — CU</th><th>Unique ID — VVPAT</th></tr></thead>
+      <tbody id="evmDepBody"></tbody>
+    </table>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(6)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save6">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 8: MOCK POLL ══ -->
+<div class="page" data-page="7">
+  <div class="page-title"><h2>Mock Poll Responsibilities</h2><div class="sub">PS-WISE STATUS AT TIME OF MOCK POLL</div></div>
+  <div class="card mock-table-wrap" style="overflow-x:auto;padding:12px 8px;">
+    <table class="mock-table" id="mockDesktop">
+      <thead><tr id="mockHead"><th class="left" style="min-width:160px">Item</th></tr></thead>
+      <tbody id="mockBody"></tbody>
+    </table>
+  </div>
+  <div class="mock-cards" id="mockCards"></div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(7)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save7">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 9: ACTUAL POLL ══ -->
+<div class="page" data-page="8">
+  <div class="page-title"><h2>Responsibilities during Actual Poll</h2><div class="sub">PS-WISE STATUS DURING ACTUAL POLLING</div></div>
+  <div class="card mock-table-wrap" style="overflow-x:auto;padding:12px 8px;">
+    <table class="mock-table" id="actualDesktop">
+      <thead><tr id="actualHead"><th class="left" style="min-width:200px">Item</th></tr></thead>
+      <tbody id="actualBody"></tbody>
+    </table>
+  </div>
+  <div class="mock-cards" id="actualCards"></div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(8)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save8">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 10: END OF POLL ══ -->
+<div class="page" data-page="9">
+  <div class="page-title"><h2>End of Poll Responsibilities</h2><div class="sub">PS-WISE STATUS AT END OF POLL</div></div>
+  <div class="card mock-table-wrap" style="overflow-x:auto;padding:12px 8px;">
+    <table class="mock-table" id="endPollDesktop">
+      <thead><tr id="endPollHead"><th class="left" style="min-width:200px">Item</th></tr></thead>
+      <tbody id="endPollBody"></tbody>
+    </table>
+  </div>
+  <div class="mock-cards" id="endPollCards"></div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(9)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save9">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 11: VOTER TURNOUT ══ -->
+<div class="page" data-page="10">
+  <div class="page-title"><h2>Voter Turnout</h2><div class="sub">POLLING STATION WISE — M / F / 3RD / TOTAL</div></div>
+  <!-- Desktop -->
+  <div class="card vt-desktop" style="overflow-x:auto;padding:12px 8px;">
+    <table class="vt-table" id="vtDesktop">
+      <thead>
+        <tr id="vtHeadPS"><th rowspan="2" class="vt-corner">Time</th></tr>
+        <tr id="vtHeadSub"></tr>
+      </thead>
+      <tbody id="vtDesktopBody"></tbody>
+    </table>
+  </div>
+  <!-- Mobile -->
+  <div class="vt-mobile">
+    <div class="card" style="padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <label style="font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-light);white-space:nowrap;">Polling Station</label>
+      <select id="vtPsPicker" style="max-width:140px;padding:6px 8px;border:1px solid var(--border);border-radius:3px;background:var(--paper);font-family:'DM Mono',monospace;font-size:.88rem;"></select>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="vt-mob-table">
+        <thead><tr><th class="left" style="width:88px">Time</th><th>Male</th><th>Female</th><th>3rd</th><th>Total</th></tr></thead>
+        <tbody id="vtMobileBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetVT()">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save10">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 11: REPORTS TO BE FURNISHED ══ -->
+<div class="page" data-page="11">
+  <div class="page-title"><h2>Reports to be Furnished</h2><div class="sub">CHECKLIST — REPORTS &amp; SUBMISSIONS</div></div>
+  <div class="banner"><div class="stat"><div class="lbl">Collected</div><div class="val" id="rptCount">0</div></div><div class="stat"><div class="lbl">Remaining</div><div class="val hi" id="rptRemain">10</div></div></div>
+  <div class="card">
+    <ul class="checklist" id="rptChecklist">
+      <li data-idx="0"><input type="checkbox"><span>AMF report for every round of field visit</span></li>
+      <li data-idx="1"><input type="checkbox"><span>Vulnerability Mapping Report in Format VM-2 and VM-3</span></li>
+      <li data-idx="2"><input type="checkbox"><span>Completion of mock poll — issuance of Mock Poll Certificate, deletion of Mock Poll data (including removal of mock poll slips from VVPAT)</span></li>
+      <li data-idx="3"><input type="checkbox"><span>Commencement of poll</span></li>
+      <li data-idx="4"><input type="checkbox"><span>Replacement of EVM/VVPAT during mock poll and poll</span></li>
+      <li data-idx="5"><input type="checkbox"><span>Approximate voter turnout data at given intervals through appropriate channel</span></li>
+      <li data-idx="6"><input type="checkbox"><span>End of Poll — pressing of CLOSE button, sealing, departure of polling parties in the designated vehicles on designated routes only to reach the Receiving Centre etc.</span></li>
+      <li data-idx="7"><input type="checkbox"><span>Reporting of any unwarranted event and immediate response / corrective measures taken</span></li>
+      <li data-idx="8"><input type="checkbox"><span>Any other reporting unwarranted event and immediate response / corrective measures</span></li>
+      <li data-idx="9"><input type="checkbox"><span>PS-wise poll day activities report by SO</span></li>
+    </ul>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(11)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save11">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 12: REPORTS TO BE FURNISHED ══ -->
+<div class="page" data-page="11">
+  <div class="page-title"><h2>Reports to be Furnished</h2><div class="sub">CHECKLIST — REPORTING OBLIGATIONS</div></div>
+  <div class="banner"><div class="stat"><div class="lbl">Collected</div><div class="val" id="repCount">0</div></div><div class="stat"><div class="lbl">Remaining</div><div class="val hi" id="repRemain">10</div></div></div>
+  <div class="card">
+    <ul class="checklist" id="reportsChecklist">
+      <li data-idx="0"><input type="checkbox"><span>AMF report for every round of field visit</span></li>
+      <li data-idx="1"><input type="checkbox"><span>Vulnerability Mapping Report in Format VM-2 and VM-3</span></li>
+      <li data-idx="2"><input type="checkbox"><span>Completion of mock poll — issuance of Mock Poll Certificate, deletion of Mock Poll data (including removal of mock poll slips from VVPAT)</span></li>
+      <li data-idx="3"><input type="checkbox"><span>Commencement of poll</span></li>
+      <li data-idx="4"><input type="checkbox"><span>Replacement of EVM/VVPAT during mock poll and poll</span></li>
+      <li data-idx="5"><input type="checkbox"><span>Approximate voter turnout data at given intervals through appropriate channel</span></li>
+      <li data-idx="6"><input type="checkbox"><span>End of Poll — pressing of CLOSE button, sealing, departure of polling parties in the designated vehicles on designated routes only to reach the Receiving Centre etc.</span></li>
+      <li data-idx="7"><input type="checkbox"><span>Reporting of any unwarranted event and immediate response/corrective measures taken</span></li>
+      <li data-idx="8"><input type="checkbox"><span>Any other reporting unwarranted event and immediate response/corrective measures</span></li>
+      <li data-idx="9"><input type="checkbox"><span>PS-wise poll day activities report by SO</span></li>
+    </ul>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(11)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save11b">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-print" onclick="window.print()">🖨 Print / Save PDF</button></div>
+  </div>
+</div>
+
+</form>
+</div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const SUBS    = ["217","218","219","233","234","235","238","239"];
+const PS_NAMES = {
+  "217": "217 - NIMTA JIBANTOSH GHOSH MEMORIAL GIRLS HIGH SCHOOL, R-1",
+  "218": "218 - NIMTA JIBANTOSH GHOSH MEMORIAL GIRLS HIGH SCHOOL, R-2",
+  "219": "219 - NIMTA JIBANTOSH GHOSH MEMORIAL GIRLS HIGH SCHOOL, R-3",
+  "233": "233 - NIMTA HIGH SCHOOL, R-1",
+  "234": "234 - NIMTA HIGH SCHOOL, R-2",
+  "235": "235 - NIMTA HIGH SCHOOL, R-3",
+  "238": "238 - NIMTA HIGH SCHOOL, R-4",
+  "239": "239 - NIMTA HIGH SCHOOL, R-5",
+};
+const VENUES  = ["Nimta Jibantosh","Nimta High"];
+const PAGE_LABELS = ["Documents","Voters","AMF","Contacts","Pre-Poll","Poll-Eve","EVM/VVPAT","Mock Poll","Actual Poll","End of Poll","Turnout","Reports"];
+const AMF_ITEMS = ["Block/Municipality","Ramp with Handrail","Condition of Approach Road","Drinking Water","Shade","Male Toilet","Female Toilet","Power Connection","Plug Points","Lighting","Furniture","Voter Assistant Booth","Signage","PS on Ground Floor","Number and Condition of Door & Door-lock","Number and Condition of Window, Grill & Window-lock"];
+const AMF_FURNITURE_SUBS = [
+  { label: "No. of table",           key: "furn_table" },
+  { label: "No. of chair",           key: "furn_chair" },
+  { label: "No. of pair of benches", key: "furn_bench" },
+];
+const CONTACT_ROWS = [
+  {key:"hoi",label:"HOI (Head of Institution)"},{key:"keyh",label:"Key Handler"},
+  {key:"water",label:"Water Supplier"},{key:"deco",label:"Decorator"},
+  {key:"elec",label:"Electrician"},{key:"clean",label:"Cleaner"},{key:"shg",label:"SHG / MDM"},
+];
+const PRE_POLL_ITEMS = [
+  "Route plotted on the map is feasible","AMF is done",
+  "Proper mobile network is available","There is any violation of the MCC",
+];
+const POLL_EVE_ITEMS = [
+  "Security forces have reached the PS","PP along with materials reached the PS",
+  "Safe arrival message has been sent","Readiness of PP reported to Control Room",
+  "Readiness of the PS reported to the Control Room",
+  'Reserve EVM/VVPAT have "RESERVE" sticker on them',
+  "Trackable vehicle allotted",
+  "Intermediate storage and movement plan of reserve EVM/VVPAT received from RO",
+];
+const MOCK_POLL_ROWS = [
+  {key:"mp_agents",  label:"1. Number of polling agents present at the start of Mock Poll", text:true},
+  {key:"mp_started", label:"2. Mock Poll started"},
+  {key:"mp_cert",    label:"3. Mock Poll certificate provided to the polling agents"},
+  {key:"mp_crc",     label:"4. CRC done after Mock Poll"},
+  {key:"mp_slips",   label:"5. Mock Poll slips removed from VVPAT"},
+  {key:"mp_zero",    label:"6. Zero is showing after pressing the TOTAL button"},
+  {key:"mp_17a",     label:"7. Point #6 is confirmed in writing in 17A"},
+  {key:"mp_replaced",label:"8. EVM/VVPAT replaced during Mock Poll"},
+  {key:"mp_defect",  label:"9. Defective unit is collected from PrO"},
+  {key:"mp_sticker", label:'10. "MOCK POLL REPLACE" sticker attached to the non functional unit'},
+  {key:"mp_part4",   label:"11. Part IV of PrO report collected"},
+];
+const ACTUAL_POLL_ROWS = [
+  {key:"ap_event",   label:"1. Unwanted event taken place"},
+  {key:"ap_bucu",    label:"2. BU & CU replaced during Actual poll"},
+  {key:"ap_vvpat",   label:"3. VVPAT replaced during Actual poll"},
+  {key:"ap_part5",   label:"4. Part V of PrO report collected"},
+  {key:"ap_power",   label:"5. Power pack of CU replaced"},
+  {key:"ap_reserve", label:"6. Reserve polling personnel assigned"},
+];
+const END_POLL_ROWS = [
+  {key:"ep_close",   label:'1. "CLOSE" button of CU pressed'},
+  {key:"ep_power",   label:"2. Power pack of VVPAT removed"},
+  {key:"ep_diary",   label:"3. PrO Diary filled up properly"},
+  {key:"ep_sealed",  label:"4. EVM and VVPAT properly sealed"},
+  {key:"ep_17c",     label:"5. 17C given to polling agents"},
+  {key:"ep_17a",     label:"6. 17A register fill up properly"},
+];
+const VT_TIMES = ["9:00 AM","11:00 AM","1:00 PM","3:00 PM","5:00 PM","6:00 PM","In queue"];
+const VT_COLS  = ["M","F","3","Tot"];
+
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+const PFX = 'wbgela2026_';
+const sv = (k,v) => { try { localStorage.setItem(PFX+k, JSON.stringify(v)); } catch(e){} };
+const ld = (k,d)  => { try { const v=localStorage.getItem(PFX+k); return v!==null?JSON.parse(v):d; } catch(e){return d;} };
+
+function showSaved(p) {
+  const el = document.getElementById('save'+p);
+  if (!el) return;
+  el.classList.add('on');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('on'), 1800);
+  document.getElementById('saveGlobal').classList.add('on');
+  clearTimeout(window._gst);
+  window._gst = setTimeout(() => document.getElementById('saveGlobal').classList.remove('on'), 1800);
+}
+
+function bindField(el, pgIdx, cb) {
+  const key = el.dataset.key || el.name;
+  if (!key) return;
+  const val = ld(key, null);
+  if (val !== null) {
+    if (el.type==='checkbox'||el.type==='radio') el.checked = !!val;
+    else el.value = val;
+  }
+  const handler = () => {
+    const newVal = (el.type==='checkbox'||el.type==='radio') ? el.checked : el.value;
+    const oldVal = ld(key, null);
+    pushUndo(key, oldVal);   // record previous value before overwriting
+    sv(key, newVal);
+    if (pgIdx !== undefined) showSaved(pgIdx);
+    if (cb) cb();
+  };
+  el.addEventListener('change', handler);
+  if (el.type!=='checkbox'&&el.type!=='radio') el.addEventListener('input', handler);
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+let cur = 0;
+const pages = document.querySelectorAll('.page');
+
+function show(p) {
+  pages.forEach((pg,i) => pg.classList.toggle('active', i===p));
+  cur = p;
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function nextPage() { if (cur < pages.length-1) show(cur+1); }
+function prevPage() { if (cur > 0) show(cur-1); }
+
+function buildProgress() {
+  const wrap = document.getElementById('progressSteps');
+  PAGE_LABELS.forEach((lbl,i) => {
+    const d = document.createElement('div');
+    d.className = 'step';
+    d.innerHTML = `<div class="step-dot">${i+1}</div><div class="step-label">${lbl}</div>`;
+    d.onclick = () => show(i);
+    wrap.appendChild(d);
+  });
+}
+function updateProgress() {
+  document.querySelectorAll('.step').forEach((el,i) => {
+    el.classList.toggle('active', i===cur);
+    el.classList.toggle('done',   i<cur);
+  });
+}
+
+// ── RESET ─────────────────────────────────────────────────────────────────────
+function resetPage(p) {
+  if (!confirm('Reset all data on this page?')) return;
+  const pg = document.querySelector(`.page[data-page="${p}"]`);
+  pg.querySelectorAll('input,select').forEach(el => {
+    const key = el.dataset.key || el.name;
+    if (el.type==='checkbox'||el.type==='radio') el.checked = false;
+    else el.value = '';
+    if (key) sv(key, '');
+  });
+  if (p===0) updateCheckProgress();
+  if (p===1) updateVoterTotals();
+  // AMF page (p===2) uses per-visit delete buttons instead
+}
+
+// ── PAGE 1: DOCUMENTS ─────────────────────────────────────────────────────────
+function updateCheckProgress() {
+  const cbs = document.querySelectorAll('#docChecklist input[type=checkbox]');
+  let n = 0;
+  cbs.forEach(cb => { const li=cb.closest('li'); if(cb.checked){n++; li.classList.add('checked');} else li.classList.remove('checked'); });
+  document.getElementById('checkCount').textContent  = n;
+  document.getElementById('checkRemain').textContent = cbs.length - n;
+}
+function initPage1() {
+  document.querySelectorAll('#docChecklist li').forEach(li => {
+    const idx=li.dataset.idx, cb=li.querySelector('input');
+    cb.dataset.key='doc_'+idx; cb.name='doc_'+idx;
+    bindField(cb, 0, updateCheckProgress);
+    li.addEventListener('click', e => { if(e.target!==cb){cb.checked=!cb.checked; cb.dispatchEvent(new Event('change'));} });
+  });
+  updateCheckProgress();
+}
+
+// ── PAGE 2: VOTERS ────────────────────────────────────────────────────────────
+function updateVoterTotals() {
+  let gM=0,gF=0,gTG=0,gT=0;
+  SUBS.forEach(s => {
+    const m=parseInt(document.getElementById(`v_${s}_m`)?.value)||0;
+    const f=parseInt(document.getElementById(`v_${s}_f`)?.value)||0;
+    const tg=parseInt(document.getElementById(`v_${s}_tg`)?.value)||0;
+    const tot=m+f+tg;
+    const el=document.getElementById(`v_${s}_tot`);
+    if(el) el.value=tot>0?tot:'';
+    gM+=m; gF+=f; gTG+=tg; gT+=tot;
+  });
+  const fmt=n=>n||'—';
+  document.getElementById('grandTotal').textContent=fmt(gT);
+  document.getElementById('grandMale').textContent=fmt(gM);
+  document.getElementById('grandFemale').textContent=fmt(gF);
+  document.getElementById('grandTG').textContent=fmt(gTG);
+  document.getElementById('ftTotal').textContent=fmt(gT);
+  document.getElementById('ftMale').textContent=fmt(gM);
+  document.getElementById('ftFemale').textContent=fmt(gF);
+  document.getElementById('ftTG').textContent=fmt(gTG);
+}
+function initPage2() {
+  const tbody=document.getElementById('votersTbody');
+  SUBS.forEach(s => {
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-size:.78rem;line-height:1.3;text-align:left;padding:6px 8px;">${PS_NAMES[s]}</td>
+      <td><input type="number" id="v_${s}_m"  data-key="v_${s}_m"  min="0" placeholder="0"></td>
+      <td><input type="number" id="v_${s}_f"  data-key="v_${s}_f"  min="0" placeholder="0"></td>
+      <td><input type="number" id="v_${s}_tg" data-key="v_${s}_tg" min="0" placeholder="0"></td>
+      <td><input type="number" id="v_${s}_tot" class="total" placeholder="Auto" readonly tabindex="-1"></td>`;
+    tbody.appendChild(tr);
+    ['m','f','tg'].forEach(t => bindField(document.getElementById(`v_${s}_${t}`), 1, updateVoterTotals));
+  });
+  updateVoterTotals();
+}
+
+// ── PAGE 3: AMF (MULTI-VISIT) ─────────────────────────────────────────────────
+function buildAMFTable(ps, visitId) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.cssText = 'padding:10px 12px;margin-bottom:0;box-shadow:none;border:1px solid var(--border);';
+
+  const title = document.createElement('div');
+  title.className = 'card-title';
+  title.style.fontSize = '.8rem';
+  title.textContent = `PS ${ps}`;
+  card.appendChild(title);
+
+  const table = document.createElement('table');
+  table.className = 'data';
+  table.innerHTML = `<thead><tr><th class="left">Facility</th><th style="width:110px">Status</th></tr></thead>`;
+  const tbody = document.createElement('tbody');
+
+  AMF_ITEMS.forEach(item => {
+    const name = `amf_${visitId}_${ps}_${item.replace(/\W+/g,'_')}`;
+    const tr = document.createElement('tr');
+
+    if (item === 'Block/Municipality' ||
+        item === 'Number and Condition of Door & Door-lock' ||
+        item === 'Number and Condition of Window, Grill & Window-lock') {
+      // Text answer field
+      tr.innerHTML = `<td style="font-size:.86rem">${item}</td>
+        <td><input type="text" data-key="${name}"
+          style="border:none;background:transparent;font-family:'EB Garamond',serif;font-size:.86rem;padding:3px 4px;width:100%;"
+          placeholder="Enter details…"></td>`;
+      tbody.appendChild(tr);
+      bindField(tr.querySelector('input'), 2);
+
+    } else if (item === 'Condition of Approach Road') {
+      // Good / Bad radio
+      tr.innerHTML = `<td style="font-size:.86rem">${item}</td>
+        <td><div class="rg">
+          <label class="yes"><input type="radio" name="${name}" value="good"> Good</label>
+          <label class="no"><input type="radio" name="${name}" value="bad"> Bad</label>
+        </div></td>`;
+      tbody.appendChild(tr);
+      const stored = ld(name+'_val', null);
+      tr.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        if (stored && r.value === stored) r.checked = true;
+        r.addEventListener('change', () => { sv(name+'_val', r.value); showSaved(2); });
+      });
+
+    } else {
+      // Standard Yes / No radio
+      tr.innerHTML = `<td style="font-size:.86rem">${item}</td>
+        <td><div class="rg">
+          <label class="yes"><input type="radio" name="${name}" value="yes"> Yes</label>
+          <label class="no"><input type="radio" name="${name}" value="no"> No</label>
+        </div></td>`;
+      tbody.appendChild(tr);
+      const stored = ld(name+'_val', null);
+      tr.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        if (stored && r.value === stored) r.checked = true;
+        r.addEventListener('change', () => { sv(name+'_val', r.value); showSaved(2); });
+      });
+
+      // Furniture sub-items
+      if (item === 'Furniture') {
+        AMF_FURNITURE_SUBS.forEach(sub => {
+          const subKey = `amf_${visitId}_${ps}_${sub.key}`;
+          const subTr = document.createElement('tr');
+          subTr.style.background = 'var(--check-bg)';
+          subTr.innerHTML = `
+            <td style="font-size:.82rem;padding-left:22px;color:var(--ink-light);">↳ ${sub.label}</td>
+            <td><input type="number" data-key="${subKey}" min="0" placeholder="—"
+              style="border:none;background:transparent;font-family:'DM Mono',monospace;font-size:.82rem;text-align:center;padding:3px 4px;width:100%;"></td>`;
+          tbody.appendChild(subTr);
+          bindField(subTr.querySelector('input'), 2);
+        });
+      }
+    }
+  });
+
+  table.appendChild(tbody);
+  card.appendChild(table);
+  return card;
+}
+
+function renderAMFVisit(visitId, date, collapsed) {
+  const container = document.getElementById('amfVisitsContainer');
+  const visits = getAMFVisits();
+  const visitNum = visits.indexOf(visitId) + 1;
+
+  const wrapper = document.createElement('div');
+  wrapper.className = `amf-visit${collapsed ? ' collapsed' : ''}`;
+  wrapper.id = `amfVisit_${visitId}`;
+
+  const fmt = date ? new Date(date+'T00:00:00').toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}) : 'No date';
+
+  wrapper.innerHTML = `
+    <div class="amf-visit-header" onclick="toggleAMFVisit('${visitId}')">
+      <div>
+        <div class="amf-visit-title">Visit ${visitNum} — ${fmt}</div>
+      </div>
+      <div class="amf-visit-actions">
+        <button type="button" class="btn-del-visit" onclick="event.stopPropagation();deleteAMFVisit('${visitId}')">✕ Delete</button>
+        <span class="amf-visit-chevron">▾</span>
+      </div>
+    </div>
+    <div class="amf-visit-body" id="amfVisitBody_${visitId}"></div>`;
+
+  container.appendChild(wrapper);
+
+  const body = document.getElementById(`amfVisitBody_${visitId}`);
+
+  // 2 rows of 4
+  for (let p = 0; p < 2; p++) {
+    const pair = document.createElement('div');
+    pair.className = 'amf-pair';
+    pair.style.marginBottom = '10px';
+    for (let i = 0; i < 4; i++) {
+      const s = SUBS[p * 4 + i];
+      if (s) pair.appendChild(buildAMFTable(s, visitId));
+    }
+    body.appendChild(pair);
+  }
+}
+
+function getAMFVisits() {
+  return ld('amf_visits', []);
+}
+
+function saveAMFVisits(arr) {
+  sv('amf_visits', arr);
+}
+
+function addAMFVisit() {
+  const dateInput = document.getElementById('amfNewDate');
+  const date = dateInput.value;
+  if (!date) { alert('Please select a date for this visit.'); return; }
+
+  const visits = getAMFVisits();
+  // prevent duplicate dates
+  if (visits.some(v => ld(`amf_visit_date_${v}`, '') === date)) {
+    alert('A visit for this date already exists.'); return;
+  }
+
+  const visitId = 'v' + Date.now();
+  sv(`amf_visit_date_${visitId}`, date);
+  visits.push(visitId);
+  saveAMFVisits(visits);
+
+  // collapse all existing visits, render new one expanded
+  document.querySelectorAll('.amf-visit').forEach(el => el.classList.add('collapsed'));
+  renderAMFVisit(visitId, date, false);
+  dateInput.value = '';
+  showSaved(2);
+}
+
+function toggleAMFVisit(visitId) {
+  document.getElementById(`amfVisit_${visitId}`)?.classList.toggle('collapsed');
+}
+
+function deleteAMFVisit(visitId) {
+  if (!confirm('Delete this visit and all its data?')) return;
+  // remove from list
+  const visits = getAMFVisits().filter(v => v !== visitId);
+  saveAMFVisits(visits);
+  // clear stored data for this visit
+  SUBS.forEach(ps => {
+    AMF_ITEMS.forEach(item => {
+      sv(`amf_${visitId}_${ps}_${item.replace(/\s+/g,'_')}_val`, '');
+    });
+  });
+  sv(`amf_visit_date_${visitId}`, '');
+  // remove from DOM and re-render all to fix numbering
+  document.getElementById('amfVisitsContainer').innerHTML = '';
+  initPage3();
+  showSaved(2);
+}
+
+function initPage3() {
+  const container = document.getElementById('amfVisitsContainer');
+  if (!container) return;
+  container.innerHTML = '';
+  const visits = getAMFVisits();
+  visits.forEach((visitId, idx) => {
+    const date = ld(`amf_visit_date_${visitId}`, '');
+    renderAMFVisit(visitId, date, idx < visits.length - 1); // latest expanded, rest collapsed
+  });
+}
+
+// ── PAGE 4: CONTACTS ──────────────────────────────────────────────────────────
+function initPage4() {
+  document.querySelectorAll('[data-page="3"] input[data-key]').forEach(el => bindField(el,3));
+
+  // Venue table: Category (rowspan=2) | Nimta Jibantosh | Nimta High
+  // Sub-rows: Name row, then Number row per category
+  document.getElementById('venueHead').innerHTML =
+    `<tr>
+       <th class="left" style="width:180px">Category</th>
+       ${VENUES.map(v => `<th>${v}</th>`).join('')}
+     </tr>`;
+
+  const vb = document.getElementById('venueTbody');
+  CONTACT_ROWS.forEach(row => {
+    // Name row — category cell spans 2 rows
+    const trN = document.createElement('tr');
+    trN.innerHTML = `
+      <td rowspan="2" style="font-size:.85rem;color:var(--accent);font-family:'DM Mono',monospace;font-weight:700;vertical-align:middle;background:var(--check-bg);border-right:2px solid var(--border);">${row.label}</td>
+      ${VENUES.map(v => {
+        const k = `contact_${row.key}_${v.replace(/\s+/g,'_')}_name`;
+        return `<td><div style="font-size:.62rem;font-family:'DM Mono',monospace;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Name</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter name"></td>`;
+      }).join('')}`;
+    vb.appendChild(trN);
+    trN.querySelectorAll('input').forEach(el => bindField(el, 3));
+
+    // Number row — no category cell (covered by rowspan)
+    const trNum = document.createElement('tr');
+    trNum.innerHTML = VENUES.map(v => {
+      const k = `contact_${row.key}_${v.replace(/\s+/g,'_')}_num`;
+      return `<td style="border-top:1px dashed var(--border);"><div style="font-size:.62rem;font-family:'DM Mono',monospace;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Number</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter number"></td>`;
+    }).join('');
+    vb.appendChild(trNum);
+    trNum.querySelectorAll('input').forEach(el => bindField(el, 3));
+
+    // Separator
+    const sep = document.createElement('tr');
+    sep.innerHTML = `<td colspan="${1 + VENUES.length}" style="padding:3px;background:var(--paper-dark);"></td>`;
+    vb.appendChild(sep);
+  });
+
+  // Officers: PS | PrO Name | PrO Number | 1st PO Name | 1st PO Number
+  const ob = document.getElementById('officersTbody');
+  SUBS.forEach(s => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="mono">${s}</td>
+      <td><input type="text" data-key="pro_name_${s}" class="ltext" placeholder="Name"></td>
+      <td><input type="text" data-key="pro_num_${s}"  class="ltext" placeholder="Number"></td>
+      <td><input type="text" data-key="po1_name_${s}" class="ltext" placeholder="Name"></td>
+      <td><input type="text" data-key="po1_num_${s}"  class="ltext" placeholder="Number"></td>`;
+    ob.appendChild(tr);
+    tr.querySelectorAll('input').forEach(el => bindField(el,3));
+  });
+
+  // BLO: PS | Name | Number
+  const bb = document.getElementById('bloTbody');
+  SUBS.forEach(s => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="mono">${s}</td>
+      <td><input type="text" data-key="blo_name_${s}" class="ltext" placeholder="Name"></td>
+      <td><input type="text" data-key="blo_num_${s}"  class="ltext" placeholder="Number"></td>`;
+    bb.appendChild(tr);
+    tr.querySelectorAll('input').forEach(el => bindField(el,3));
+  });
+}
+
+// ── PAGE 5: PRE-POLL ──────────────────────────────────────────────────────────
+function initChecklist(tbodyId, items, keyPrefix, pgIdx) {
+  const tbody=document.getElementById(tbodyId);
+  items.forEach((item,i) => {
+    const sl=i+1;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="mono">${sl}</td>
+      <td style="text-align:center"><input type="checkbox" data-key="${keyPrefix}_chk_${sl}" style="width:16px;height:16px;accent-color:var(--green);cursor:pointer;"></td>
+      <td style="font-size:.92rem">${item}</td>
+      <td><select data-key="${keyPrefix}_sts_${sl}"><option value="">—</option><option value="yes">Yes</option><option value="no">No</option></select></td>
+      <td><input type="text" data-key="${keyPrefix}_rem_${sl}" class="ltext" placeholder="Remarks…"></td>`;
+    tbody.appendChild(tr);
+    tr.querySelectorAll('input,select').forEach(el=>bindField(el,pgIdx));
+  });
+}
+
+// ── PAGE 7: EVM / VVPAT ───────────────────────────────────────────────────────
+function buildChgTable(tbodyId, prefix, pgIdx) {
+  const tbody=document.getElementById(tbodyId);
+  for(let i=0;i<5;i++){
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="mono">${i+1}</td>
+      <td><input type="text" data-key="${prefix}_ps_${i+1}" class="ltext" placeholder="PS name"></td>
+      <td><input type="text" data-key="${prefix}_rbu_${i+1}" placeholder="BU-ID"></td>
+      <td><input type="text" data-key="${prefix}_rcu_${i+1}" placeholder="CU-ID"></td>
+      <td><input type="text" data-key="${prefix}_rvv_${i+1}" placeholder="VVPAT-ID"></td>
+      <td><input type="text" data-key="${prefix}_pbu_${i+1}" placeholder="BU-ID"></td>
+      <td><input type="text" data-key="${prefix}_pcu_${i+1}" placeholder="CU-ID"></td>
+      <td><input type="text" data-key="${prefix}_pvv_${i+1}" placeholder="VVPAT-ID"></td>`;
+    tbody.appendChild(tr);
+    tr.querySelectorAll('input').forEach(el=>bindField(el,pgIdx));
+  }
+}
+function initPage7() {
+  ['evm_recv_datetime','chg_mock_datetime','chg_actual_datetime','evm_dep_datetime'].forEach(key=>{
+    const el=document.querySelector(`[data-key="${key}"]`); if(el) bindField(el,6);
+  });
+  ['evmBody','evmDepBody'].forEach(id=>{
+    const tbody=document.getElementById(id);
+    for(let i=1;i<=5;i++){
+      const tr=document.createElement('tr');
+      const pfx=id==='evmBody'?'evm':'evmdep';
+      tr.innerHTML=`<td class="mono">${i}</td>
+        <td><input type="text" data-key="${pfx}_bu_${i}" placeholder="BU-ID"></td>
+        <td><input type="text" data-key="${pfx}_cu_${i}" placeholder="CU-ID"></td>
+        <td><input type="text" data-key="${pfx}_vv_${i}" placeholder="VVPAT-ID"></td>`;
+      tbody.appendChild(tr); tr.querySelectorAll('input').forEach(el=>bindField(el,6));
+    }
+  });
+  buildChgTable('chgMockBody','mock',6);
+  buildChgTable('chgActualBody','actual',6);
+}
+
+// ── GENERIC MOCK-STYLE PAGE BUILDER ──────────────────────────────────────────
+function initMockPage(headId, tbodyId, cardsId, rows, pgIdx) {
+  const headRow = document.getElementById(headId);
+  SUBS.forEach(s => { const th=document.createElement('th'); th.textContent=s; headRow.appendChild(th); });
+  const tbody = document.getElementById(tbodyId);
+  const cardsWrap = document.getElementById(cardsId);
+  rows.forEach(row => {
+    // desktop row
+    const tr = document.createElement('tr');
+    const labelTd = document.createElement('td'); labelTd.className='item-label'; labelTd.textContent=row.label;
+    tr.appendChild(labelTd);
+    SUBS.forEach(s => {
+      const td = document.createElement('td');
+      const key = `${row.key}_${s}`;
+      const el = document.createElement('select');
+      el.innerHTML = '<option value="">—</option><option value="yes">Yes</option><option value="no">No</option><option value="na">N.A.</option>';
+      el.dataset.key = key;
+      bindField(el, pgIdx);
+      td.appendChild(el); tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+    // mobile card
+    const card = document.createElement('div'); card.className='mock-card';
+    let cells = SUBS.map(s => {
+      const key = `${row.key}_${s}_m`;
+      return `<div class="mock-card-cell"><div class="ps-label">PS ${s}</div>
+        <select data-key="${key}"><option value="">—</option><option value="yes">Yes</option><option value="no">No</option><option value="na">N.A.</option></select>
+      </div>`;
+    }).join('');
+    card.innerHTML = `<div class="mock-card-title">${row.label}</div><div class="mock-card-grid">${cells}</div>`;
+    cardsWrap.appendChild(card);
+    card.querySelectorAll('select').forEach(el => bindField(el, pgIdx));
+  });
+}
+
+// ── PAGE 8: MOCK POLL ─────────────────────────────────────────────────────────
+function initPage8() {
+  const headRow=document.getElementById('mockHead');
+  SUBS.forEach(s=>{ const th=document.createElement('th'); th.textContent=s; headRow.appendChild(th); });
+  const tbody=document.getElementById('mockBody');
+  const cardsWrap=document.getElementById('mockCards');
+  MOCK_POLL_ROWS.forEach(row=>{
+    // desktop row
+    const tr=document.createElement('tr');
+    const labelTd=document.createElement('td'); labelTd.className='item-label'; labelTd.textContent=row.label;
+    tr.appendChild(labelTd);
+    SUBS.forEach(s=>{
+      const td=document.createElement('td');
+      const key=`${row.key}_${s}`;
+      const el=row.text ? document.createElement('input') : document.createElement('select');
+      if(row.text){ el.type='number'; el.min='0'; el.placeholder='—'; }
+      else { el.innerHTML='<option value="">—</option><option value="yes">Yes</option><option value="no">No</option><option value="na">N.A.</option>'; }
+      el.dataset.key=key;
+      bindField(el,7);
+      td.appendChild(el); tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+    // mobile card
+    const card=document.createElement('div'); card.className='mock-card';
+    let cells=SUBS.map(s=>{
+      const key=`${row.key}_${s}_m`;
+      const inp=row.text?`<input type="number" data-key="${key}" min="0" placeholder="—">`
+        :`<select data-key="${key}"><option value="">—</option><option value="yes">Yes</option><option value="no">No</option><option value="na">N.A.</option></select>`;
+      return `<div class="mock-card-cell"><div class="ps-label">PS ${s}</div>${inp}</div>`;
+    }).join('');
+    card.innerHTML=`<div class="mock-card-title">${row.label}</div><div class="mock-card-grid">${cells}</div>`;
+    cardsWrap.appendChild(card);
+    card.querySelectorAll('input,select').forEach(el=>bindField(el,7));
+  });
+}
+
+// ── PAGE 9: VOTER TURNOUT ─────────────────────────────────────────────────────
+function vtKey(ps,time,col){ return `vt_${ps}_${time.replace(/[^a-zA-Z0-9]/g,'')}${col}`; }
+
+function calcVTRow(ps,time){
+  const m =parseFloat(document.getElementById(vtKey(ps,time,'M'))?.value)||0;
+  const f =parseFloat(document.getElementById(vtKey(ps,time,'F'))?.value)||0;
+  const t3=parseFloat(document.getElementById(vtKey(ps,time,'3'))?.value)||0;
+  const tot=m+f+t3;
+  const de=document.getElementById(vtKey(ps,time,'Tot')); if(de) de.value=tot>0?tot:'';
+  const mo=document.getElementById('mob_'+vtKey(ps,time,'Tot')); if(mo) mo.value=tot>0?tot:'';
+}
+function calcVTCols(ps){
+  ['M','F','3'].forEach(col=>{
+    let sum=0;
+    VT_TIMES.forEach(t=>{ sum+=parseFloat(document.getElementById(vtKey(ps,t,col))?.value)||0; });
+    const de=document.getElementById(vtKey(ps,'TOTAL',col)); if(de) de.value=sum>0?sum:'';
+    const mo=document.getElementById('mob_'+vtKey(ps,'TOTAL',col)); if(mo) mo.value=sum>0?sum:'';
+  });
+  const gM=parseFloat(document.getElementById(vtKey(ps,'TOTAL','M'))?.value)||0;
+  const gF=parseFloat(document.getElementById(vtKey(ps,'TOTAL','F'))?.value)||0;
+  const g3=parseFloat(document.getElementById(vtKey(ps,'TOTAL','3'))?.value)||0;
+  const gT=gM+gF+g3;
+  const de=document.getElementById(vtKey(ps,'TOTAL','Tot')); if(de) de.value=gT>0?gT:'';
+  const mo=document.getElementById('mob_'+vtKey(ps,'TOTAL','Tot')); if(mo) mo.value=gT>0?gT:'';
+}
+
+function makeVTInput(id,ro,cls){
+  const inp=document.createElement('input');
+  inp.type='number'; inp.min='0'; inp.placeholder='—'; inp.id=id;
+  if(ro){inp.readOnly=true;inp.tabIndex=-1;inp.className=cls;}
+  return inp;
+}
+
+function resetVT(){
+  if(!confirm('Reset all Voter Turnout data?')) return;
+  SUBS.forEach(ps=>{
+    VT_TIMES.forEach(t=>{
+      ['M','F','3'].forEach(col=>{
+        const key=vtKey(ps,t,col); sv(key,'');
+        const de=document.getElementById(key); if(de) de.value='';
+        const mo=document.getElementById('mob_'+key); if(mo) mo.value='';
+      });
+      calcVTRow(ps,t);
+    });
+    calcVTCols(ps);
+  });
+}
+
+function buildVTMobileRows(ps){
+  const body=document.getElementById('vtMobileBody'); body.innerHTML='';
+  VT_TIMES.forEach(t=>{
+    const tr=document.createElement('tr');
+    const lbl=document.createElement('td'); lbl.className='vt-lbl'; lbl.textContent=t; tr.appendChild(lbl);
+    VT_COLS.forEach(col=>{
+      const td=document.createElement('td');
+      const key=vtKey(ps,t,col);
+      const isRo=col==='Tot';
+      const inp=makeVTInput('mob_'+key,isRo,'ro-tot');
+      const de=document.getElementById(key); if(de) inp.value=de.value;
+      if(!isRo) inp.addEventListener('input',()=>{ if(de){de.value=inp.value; de.dispatchEvent(new Event('input'));} });
+      td.appendChild(inp); tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+  const trT=document.createElement('tr'); trT.className='vt-tot-row';
+  const lT=document.createElement('td'); lT.className='vt-lbl'; lT.textContent='TOTAL'; trT.appendChild(lT);
+  VT_COLS.forEach(col=>{
+    const td=document.createElement('td');
+    const key=vtKey(ps,'TOTAL',col);
+    const inp=makeVTInput('mob_'+key,true,'ro-grand');
+    const de=document.getElementById(key); if(de) inp.value=de.value;
+    td.appendChild(inp); trT.appendChild(td);
+  });
+  body.appendChild(trT);
+}
+
+function initPage9(){
+  // desktop headers
+  const hPS=document.getElementById('vtHeadPS'); const hSub=document.getElementById('vtHeadSub');
+  SUBS.forEach(ps=>{
+    const th=document.createElement('th'); th.colSpan=4; th.className='vt-ps-hd'; th.textContent=ps; hPS.appendChild(th);
+    VT_COLS.forEach(col=>{ const ts=document.createElement('th'); ts.textContent=col; hSub.appendChild(ts); });
+  });
+  // desktop rows
+  const dtb=document.getElementById('vtDesktopBody');
+  VT_TIMES.forEach(t=>{
+    const tr=document.createElement('tr');
+    const lbl=document.createElement('td'); lbl.className='vt-lbl'; lbl.textContent=t; tr.appendChild(lbl);
+    SUBS.forEach(ps=>{
+      VT_COLS.forEach(col=>{
+        const td=document.createElement('td');
+        const key=vtKey(ps,t,col); const isRo=col==='Tot';
+        const inp=makeVTInput(key,isRo,'ro-tot');
+        if(!isRo){ inp.dataset.key=key; bindField(inp,10,()=>{ calcVTRow(ps,t); calcVTCols(ps); }); }
+        td.appendChild(inp); tr.appendChild(td);
+      });
+    });
+    dtb.appendChild(tr);
+  });
+  // TOTAL row desktop
+  const trT=document.createElement('tr'); trT.className='vt-tot-row';
+  const lT=document.createElement('td'); lT.className='vt-lbl'; lT.textContent='TOTAL'; trT.appendChild(lT);
+  SUBS.forEach(ps=>{ VT_COLS.forEach(col=>{ const td=document.createElement('td'); td.appendChild(makeVTInput(vtKey(ps,'TOTAL',col),true,'ro-grand')); trT.appendChild(td); }); });
+  dtb.appendChild(trT);
+  // mobile picker
+  const picker=document.getElementById('vtPsPicker');
+  SUBS.forEach(ps=>{ const opt=document.createElement('option'); opt.value=ps; opt.textContent='PS '+ps; picker.appendChild(opt); });
+  buildVTMobileRows(SUBS[0]);
+  picker.addEventListener('change',()=>buildVTMobileRows(picker.value));
+  calcVTCols(SUBS[0]);
+}
+
+// ── PAGE 11: REPORTS TO BE FURNISHED ─────────────────────────────────────────
+function updateRptProgress() {
+  const cbs = document.querySelectorAll('#rptChecklist input[type=checkbox]');
+  let n = 0;
+  cbs.forEach(cb => { const li=cb.closest('li'); if(cb.checked){n++; li.classList.add('checked');} else li.classList.remove('checked'); });
+  document.getElementById('rptCount').textContent  = n;
+  document.getElementById('rptRemain').textContent = cbs.length - n;
+}
+function initPage11() {
+  document.querySelectorAll('#rptChecklist li').forEach(li => {
+    const idx = li.dataset.idx, cb = li.querySelector('input');
+    cb.dataset.key = 'rpt_'+idx; cb.name = 'rpt_'+idx;
+    bindField(cb, 11, updateRptProgress);
+    li.addEventListener('click', e => { if(e.target!==cb){cb.checked=!cb.checked; cb.dispatchEvent(new Event('change'));} });
+  });
+  updateRptProgress();
+}
+
+// ── PAGE 12: REPORTS TO BE FURNISHED ─────────────────────────────────────────
+function updateRepProgress() {
+  const cbs = document.querySelectorAll('#reportsChecklist input[type=checkbox]');
+  let n = 0;
+  cbs.forEach(cb => {
+    const li = cb.closest('li');
+    if (cb.checked) { n++; li.classList.add('checked'); }
+    else li.classList.remove('checked');
+  });
+  document.getElementById('repCount').textContent  = n;
+  document.getElementById('repRemain').textContent = cbs.length - n;
+}
+function initPage12() {
+  document.querySelectorAll('#reportsChecklist li').forEach(li => {
+    const idx = li.dataset.idx, cb = li.querySelector('input');
+    cb.dataset.key = 'rep_'+idx; cb.name = 'rep_'+idx;
+    bindField(cb, 11, updateRepProgress);
+    li.addEventListener('click', e => {
+      if (e.target !== cb) { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); }
+    });
+  });
+  updateRepProgress();
+}
+
+// ── UNDO SYSTEM ───────────────────────────────────────────────────────────────
+const UNDO_STACK = [];
+const UNDO_MAX   = 50;
+
+function pushUndo(key, oldVal) {
+  UNDO_STACK.push({ key, oldVal });
+  if (UNDO_STACK.length > UNDO_MAX) UNDO_STACK.shift();
+}
+
+function undoLast() {
+  if (UNDO_STACK.length === 0) { alert('Nothing to undo.'); return; }
+  const { key, oldVal } = UNDO_STACK.pop();
+  // restore in localStorage
+  sv(key, oldVal);
+  // restore in DOM — find element by data-key or name
+  let el = document.querySelector(`[data-key="${key}"]`) || document.querySelector(`[name="${key}"]`);
+  if (el) {
+    if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = !!oldVal;
+    } else {
+      el.value = oldVal || '';
+    }
+    // trigger visual updates
+    el.dispatchEvent(new Event('change'));
+  }
+  // also check radio groups (AMF)
+  const radios = document.querySelectorAll(`input[name="${key}"]`);
+  radios.forEach(r => { r.checked = (r.value === oldVal); });
+  showSavedGlobal && showSavedGlobal();
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+buildProgress();
+updateProgress();
+initPage1();
+initPage2();
+initPage3();
+initPage4();
+initChecklist('prePollBody', PRE_POLL_ITEMS, 'pp', 4);
+initChecklist('pollEveBody', POLL_EVE_ITEMS, 'pe', 5);
+initPage7();
+initPage8();
+initMockPage('actualHead',  'actualBody',  'actualCards',  ACTUAL_POLL_ROWS, 8);
+initMockPage('endPollHead', 'endPollBody', 'endPollCards', END_POLL_ROWS,    9);
+initPage9();
+initPage11();
+initPage12();
+</script>
+
+<!-- ══ PWA: INSTALL PROMPT BANNER ══ -->
+<div id="installBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
+  background:#1a1a2e;color:#f5f0e8;padding:14px 20px;
+  display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  box-shadow:0 -2px 16px rgba(0,0,0,.3);">
+  <div>
+    <div style="font-family:'EB Garamond',serif;font-size:1.05rem;font-weight:600;">Install WB GELA 2026</div>
+    <div style="font-family:'DM Mono',monospace;font-size:.7rem;color:#9a8f7a;margin-top:2px;">Add to home screen for offline access</div>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button onclick="installApp()" style="padding:8px 18px;background:#1a5c2e;color:#fff;border:none;border-radius:4px;font-family:'EB Garamond',serif;font-size:.97rem;cursor:pointer;">Install</button>
+    <button onclick="document.getElementById('installBanner').style.display='none'" style="padding:8px 14px;background:transparent;color:#9a8f7a;border:1px solid #3d3d5c;border-radius:4px;font-family:'EB Garamond',serif;font-size:.97rem;cursor:pointer;">Not now</button>
+  </div>
+</div>
+
+<script>
+// ── INSTALL PROMPT ────────────────────────────────────────────────────────────
+let deferredPrompt = null;
+const banner = document.getElementById('installBanner');
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  banner.style.display = 'flex';
+});
+
+function installApp() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => {
+    deferredPrompt = null;
+    banner.style.display = 'none';
+  });
+}
+
+window.addEventListener('appinstalled', () => {
+  banner.style.display = 'none';
+  deferredPrompt = null;
+});
+</script>
+
+</body>
+</html>

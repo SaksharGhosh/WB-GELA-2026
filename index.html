@@ -15,8 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="GELA 2026">
 
 <!-- PWA Manifest (inline via data URI) -->
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22WB%20GELA%202026%22%2C%22short_name%22%3A%22GELA%202026%22%2C%22description%22%3A%22West%20Bengal%20General%20Election%20Logistics%20%26%20Arrangements%202026%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22background_color%22%3A%22%23f5f0e8%22%2C%22theme_color%22%3A%22%231a1a2e%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHNZZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI%2BPHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIHJ4PSIzMiIgZmlsbD0iIzFhMWEyZSIvPjx0ZXh0IHg9Ijk2IiB5PSIxMjAiIGZvbnQtc2l6ZT0iOTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPvCflbM8L3RleHQ%2BPC9zdmc%2B%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 
 <style>
   :root {
@@ -28,7 +27,7 @@
     --green: #1a5c2e; --green-light: #e8f5ec;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Georgia, 'Times New Roman', serif; background: var(--paper); color: var(--ink); font-size: 16px; }
+  body { font-family: Arial, sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; }
 
   /* ── HEADER ── */
   .app-header {
@@ -38,8 +37,8 @@
     box-shadow: 0 2px 12px var(--shadow);
   }
   .app-header h1 { font-size: 1.35rem; font-weight: 700; color: #f5ead0; letter-spacing: .04em; }
-  .app-header p  { font-size: .8rem; font-family: 'Courier New', Courier, monospace; color: #9a8f7a; margin-top: 1px; }
-  .save-global   { font-size: .8rem; font-family: 'Courier New', Courier, monospace; color: #7ec896; opacity: 0; transition: opacity .3s; }
+  .app-header p  { font-size: .8rem; font-family: Arial, sans-serif; color: #9a8f7a; margin-top: 1px; }
+  .save-global   { font-size: .8rem; font-family: Arial, sans-serif; color: #7ec896; opacity: 0; transition: opacity .3s; }
   .save-global.on { opacity: 1; }
 
   /* ── PROGRESS BAR ── */
@@ -56,13 +55,13 @@
     width: 28px; height: 28px; border-radius: 50%;
     border: 2px solid var(--border); background: var(--paper);
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Courier New', Courier, monospace; font-size: .72rem; font-weight: 600;
+    font-family: Arial, sans-serif; font-size: .72rem; font-weight: 600;
     color: var(--ink-light); position: relative; z-index: 1; transition: all .2s; flex-shrink: 0;
   }
   .step.active .step-dot { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 0 3px rgba(139,26,26,.18); }
   .step.done   .step-dot { background: var(--green);  border-color: var(--green);  color: #fff; }
   .step.done::after { background: var(--green); }
-  .step-label { font-size: .68rem; font-family: 'Courier New', Courier, monospace; color: var(--ink-light); margin-left: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
+  .step-label { font-size: .68rem; font-family: Arial, sans-serif; color: var(--ink-light); margin-left: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70px; }
   .step.active .step-label { color: var(--accent); font-weight: 600; }
 
   /* ── MAIN ── */
@@ -74,39 +73,39 @@
   /* ── PAGE HEADER ── */
   .page-title { border-left: 5px solid var(--accent); padding: 4px 0 4px 14px; margin-bottom: 22px; }
   .page-title h2 { font-size: 1.6rem; font-weight: 700; }
-  .page-title .sub { font-size: .82rem; font-family: 'Courier New', Courier, monospace; color: var(--gold); margin-top: 3px; letter-spacing: .06em; font-weight: 500; }
+  .page-title .sub { font-size: .82rem; font-family: Arial, sans-serif; color: var(--gold); margin-top: 3px; letter-spacing: .06em; font-weight: 500; }
 
   /* ── CARD ── */
   .card { background: #fff; border: 1px solid var(--border); border-radius: 5px; padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 1px 4px var(--shadow); }
   .card-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--paper-dark); display: flex; align-items: center; gap: 8px; }
-  .ps-badge { font-family: 'Courier New', Courier, monospace; font-size: .75rem; font-weight: 600; background: var(--ink); color: var(--paper); padding: 2px 7px; border-radius: 3px; }
+  .ps-badge { font-family: Arial, sans-serif; font-size: .75rem; font-weight: 600; background: var(--ink); color: var(--paper); padding: 2px 7px; border-radius: 3px; }
 
   /* ── BANNER ── */
   .banner { background: var(--ink); color: var(--paper); border-radius: 5px; padding: 12px 18px; margin-bottom: 16px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
-  .banner .stat .lbl { font-family: 'Courier New', Courier, monospace; font-size: .72rem; font-weight: 500; color: #9a8f7a; letter-spacing: .1em; text-transform: uppercase; }
+  .banner .stat .lbl { font-family: Arial, sans-serif; font-size: .72rem; font-weight: 500; color: #9a8f7a; letter-spacing: .1em; text-transform: uppercase; }
   .banner .stat .val { font-size: 1.6rem; font-weight: 700; color: #f5ead0; line-height: 1; margin-top: 1px; }
   .banner .stat .val.hi { color: #e8a87c; }
 
   /* ── TABLES ── */
   table.data { width: 100%; border-collapse: collapse; font-size: 1rem; border: 2px solid var(--border); }
-  table.data thead th { background: var(--ink); color: var(--paper); font-family: 'Courier New', Courier, monospace; font-size: .72rem; font-weight: 600; letter-spacing: .07em; padding: 9px 10px; text-align: center; border: 1px solid #2e2e4a; }
+  table.data thead th { background: var(--ink); color: var(--paper); font-family: Arial, sans-serif; font-size: .72rem; font-weight: 600; letter-spacing: .07em; padding: 9px 10px; text-align: center; border: 1px solid #2e2e4a; }
   table.data thead th.left { text-align: left; }
   table.data tbody tr { border-bottom: 1px solid var(--border); }
   table.data tbody tr:hover { background: var(--check-bg); }
   table.data td { padding: 8px 10px; vertical-align: middle; font-size: 1rem; border: 1px solid var(--border); }
-  table.data td.mono { font-family: 'Courier New', Courier, monospace; font-size: .85rem; font-weight: 600; color: var(--ink-light); text-align: center; border: 1px solid var(--border); }
-  table.data tfoot td { background: var(--paper-dark); font-weight: 700; font-family: 'Courier New', Courier, monospace; font-size: .82rem; padding: 9px 10px; border-top: 2px solid var(--border); border: 1px solid var(--border); }
+  table.data td.mono { font-family: Arial, sans-serif; font-size: .85rem; font-weight: 600; color: var(--ink-light); text-align: center; border: 1px solid var(--border); }
+  table.data tfoot td { background: var(--paper-dark); font-weight: 700; font-family: Arial, sans-serif; font-size: .82rem; padding: 9px 10px; border-top: 2px solid var(--border); border: 1px solid var(--border); }
 
   /* ── INPUTS ── */
   input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], select {
     width: 100%; padding: 7px 9px; border: 1px solid var(--border); border-radius: 3px;
-    background: var(--paper); font-family: Georgia, 'Times New Roman', serif; font-size: 1rem; font-weight: 600; color: var(--ink);
+    background: var(--paper); font-family: Arial, sans-serif; font-size: 1rem; font-weight: 600; color: var(--ink);
     transition: border-color .15s, box-shadow .15s;
   }
   input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(139,26,26,.1); background: #fff; }
-  table.data input, table.data select { border: none; background: transparent; font-family: 'Courier New', Courier, monospace; font-size: .88rem; font-weight: 500; text-align: center; padding: 4px 2px; width: 100%; }
+  table.data input, table.data select { border: none; background: transparent; font-family: Arial, sans-serif; font-size: .88rem; font-weight: 500; text-align: center; padding: 4px 2px; width: 100%; }
   table.data input:focus, table.data select:focus { background: #fffbf0; outline: 1px solid var(--gold); }
-  table.data input.ltext, table.data select.ltext { text-align: left; font-family: Georgia, 'Times New Roman', serif; font-size: 1rem; font-weight: 600; }
+  table.data input.ltext, table.data select.ltext { text-align: left; font-family: Arial, sans-serif; font-size: 1rem; font-weight: 600; }
   table.data input.total { color: var(--accent); font-weight: 700; }
 
   /* ── CHECKLIST ── */
@@ -120,17 +119,17 @@
 
   /* ── AMF RADIO ── */
   .rg { display: flex; gap: 14px; justify-content: center; }
-  .rg label { display: flex; align-items: center; gap: 5px; font-size: .9rem; font-weight: 600; font-family: 'Courier New', Courier, monospace; cursor: pointer; }
+  .rg label { display: flex; align-items: center; gap: 5px; font-size: .9rem; font-weight: 600; font-family: Arial, sans-serif; cursor: pointer; }
   .rg label.yes { color: var(--green); } .rg label.yes input { accent-color: var(--green); }
   .rg label.no  { color: var(--accent); } .rg label.no  input { accent-color: var(--accent); }
 
   /* ── FIELD ROW ── */
   .field-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-  .field-row label { font-family: 'Courier New', Courier, monospace; font-size: .76rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-light); white-space: nowrap; }
+  .field-row label { font-family: Arial, sans-serif; font-size: .76rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-light); white-space: nowrap; }
   .field-row input, .field-row select { max-width: 280px; }
 
   /* ── SUBSECTION ── */
-  .subsec-title { font-family: 'Courier New', Courier, monospace; font-size: .76rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--paper); background: var(--ink-light); padding: 7px 12px; border-radius: 3px; margin: 18px 0 10px; }
+  .subsec-title { font-family: Arial, sans-serif; font-size: .76rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--paper); background: var(--ink-light); padding: 7px 12px; border-radius: 3px; margin: 18px 0 10px; }
   .subsec-divider { border-top: 2px dashed var(--border); margin: 22px 0 8px; }
   .chg-table-wrap { overflow-x: auto; }
   .chg-table th { font-size: .68rem; font-weight: 600; padding: 6px 5px; line-height: 1.3; }
@@ -138,12 +137,12 @@
 
   /* ── MOCK POLL TABLE ── */
   .mock-table { width: 100%; border-collapse: collapse; font-size: .95rem; border: 2px solid var(--border); }
-  .mock-table th { background: var(--ink); color: var(--paper); font-family: 'Courier New', Courier, monospace; font-size: .7rem; font-weight: 600; letter-spacing: .06em; padding: 8px 5px; text-align: center; border: 1px solid #2e2e4a; }
+  .mock-table th { background: var(--ink); color: var(--paper); font-family: Arial, sans-serif; font-size: .7rem; font-weight: 600; letter-spacing: .06em; padding: 8px 5px; text-align: center; border: 1px solid #2e2e4a; }
   .mock-table th.left { text-align: left; }
   .mock-table td { padding: 7px 6px; border: 1px solid var(--border); vertical-align: middle; text-align: center; }
   .mock-table td.item-label { text-align: left; font-size: 1rem; font-weight: 600; line-height: 1.4; }
   .mock-table tbody tr:hover { background: var(--check-bg); }
-  .mock-table select, .mock-table input[type="number"] { width: 100%; border: none; background: transparent; font-family: Georgia, 'Times New Roman', serif; font-size: .95rem; font-weight: 600; text-align: center; padding: 3px 2px; }
+  .mock-table select, .mock-table input[type="number"] { width: 100%; border: none; background: transparent; font-family: Arial, sans-serif; font-size: .95rem; font-weight: 600; text-align: center; padding: 3px 2px; }
   .mock-table select:focus, .mock-table input:focus { background: #fffbf0; outline: 1px solid var(--gold); }
   /* Mobile mock: stacked cards */
   .mock-cards { display: none; }
@@ -152,20 +151,20 @@
   .mock-card-grid { display: grid; grid-template-columns: 1fr 1fr; }
   .mock-card-cell { padding: 8px 10px; border-bottom: 1px solid var(--paper-dark); border-right: 1px solid var(--paper-dark); }
   .mock-card-cell:nth-child(even) { border-right: none; }
-  .mock-card-cell .ps-label { font-family: 'Courier New', Courier, monospace; font-size: .68rem; font-weight: 600; color: var(--gold); letter-spacing: .06em; margin-bottom: 4px; }
-  .mock-card-cell select, .mock-card-cell input { width: 100%; border: 1px solid var(--border); border-radius: 3px; background: var(--paper); font-family: Georgia, 'Times New Roman', serif; font-size: 1rem; font-weight: 600; padding: 6px 7px; }
+  .mock-card-cell .ps-label { font-family: Arial, sans-serif; font-size: .68rem; font-weight: 600; color: var(--gold); letter-spacing: .06em; margin-bottom: 4px; }
+  .mock-card-cell select, .mock-card-cell input { width: 100%; border: 1px solid var(--border); border-radius: 3px; background: var(--paper); font-family: Arial, sans-serif; font-size: 1rem; font-weight: 600; padding: 6px 7px; }
   @media (max-width: 600px) { .mock-table-wrap { display: none; } .mock-cards { display: block; } }
 
   /* ── VOTER TURNOUT ── */
   .vt-table { border-collapse: collapse; font-size: .88rem; min-width: 100%; border: 2px solid var(--border); }
-  .vt-table th { background: var(--ink); color: var(--paper); font-family: 'Courier New', Courier, monospace; font-size: .65rem; font-weight: 600; padding: 6px 4px; text-align: center; border: 1px solid #2a2a45; white-space: nowrap; }
+  .vt-table th { background: var(--ink); color: var(--paper); font-family: Arial, sans-serif; font-size: .65rem; font-weight: 600; padding: 6px 4px; text-align: center; border: 1px solid #2a2a45; white-space: nowrap; }
   .vt-table th.vt-corner { min-width: 72px; text-align: left; padding-left: 7px; font-size: .7rem; }
   .vt-table th.vt-ps-hd { background: var(--accent); font-size: .7rem; }
   .vt-table td { border: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; }
-  .vt-table td.vt-lbl { text-align: left; padding: 6px 8px; background: var(--paper-dark); font-family: 'Courier New', Courier, monospace; font-size: .76rem; font-weight: 700; color: var(--ink-light); border: 1px solid var(--border); }
+  .vt-table td.vt-lbl { text-align: left; padding: 6px 8px; background: var(--paper-dark); font-family: Arial, sans-serif; font-size: .76rem; font-weight: 700; color: var(--ink-light); border: 1px solid var(--border); }
   .vt-table tr.vt-tot-row td { background: #f0ebe0; }
   .vt-table tr.vt-tot-row td.vt-lbl { background: var(--ink); color: var(--paper); }
-  .vt-table input { width: 100%; min-width: 28px; border: none; background: transparent; font-family: 'Courier New', Courier, monospace; font-size: .82rem; font-weight: 600; text-align: center; padding: 5px 2px; color: var(--ink); }
+  .vt-table input { width: 100%; min-width: 28px; border: none; background: transparent; font-family: Arial, sans-serif; font-size: .82rem; font-weight: 600; text-align: center; padding: 5px 2px; color: var(--ink); }
   .vt-table input:focus { background: #fffbf0; outline: 1px solid var(--gold); }
   .vt-table input.ro-tot   { color: var(--accent); font-weight: 700; background: #fff8f0; pointer-events: none; }
   .vt-table input.ro-grand { color: var(--green);  font-weight: 700; background: #edf7ef; pointer-events: none; }
@@ -173,13 +172,13 @@
   .vt-mobile { display: none; }
   .vt-desktop { display: block; }
   .vt-mob-table { border-collapse: collapse; width: 100%; }
-  .vt-mob-table th { background: var(--ink); color: var(--paper); font-family: 'Courier New', Courier, monospace; font-size: .76rem; font-weight: 600; padding: 9px 6px; text-align: center; border: 1px solid #2a2a45; }
+  .vt-mob-table th { background: var(--ink); color: var(--paper); font-family: Arial, sans-serif; font-size: .76rem; font-weight: 600; padding: 9px 6px; text-align: center; border: 1px solid #2a2a45; }
   .vt-mob-table th.left { text-align: left; padding-left: 10px; }
   .vt-mob-table td { border: 1px solid var(--border); padding: 0; text-align: center; vertical-align: middle; }
-  .vt-mob-table td.vt-lbl { text-align: left; padding: 9px 10px; background: var(--paper-dark); font-family: 'Courier New', Courier, monospace; font-size: .8rem; font-weight: 700; color: var(--ink-light); }
+  .vt-mob-table td.vt-lbl { text-align: left; padding: 9px 10px; background: var(--paper-dark); font-family: Arial, sans-serif; font-size: .8rem; font-weight: 700; color: var(--ink-light); }
   .vt-mob-table tr.vt-tot-row td { background: #f0ebe0; }
   .vt-mob-table tr.vt-tot-row td.vt-lbl { background: var(--ink); color: var(--paper); }
-  .vt-mob-table input { width: 100%; border: none; background: transparent; font-family: 'Courier New', Courier, monospace; font-size: 1rem; font-weight: 600; text-align: center; padding: 9px 4px; }
+  .vt-mob-table input { width: 100%; border: none; background: transparent; font-family: Arial, sans-serif; font-size: 1rem; font-weight: 600; text-align: center; padding: 9px 4px; }
   .vt-mob-table input:focus { background: #fffbf0; outline: 1px solid var(--gold); }
   .vt-mob-table input.ro-tot   { color: var(--accent); font-weight: 700; background: #fff8f0; pointer-events: none; }
   .vt-mob-table input.ro-grand { color: var(--green);  font-weight: 700; background: #edf7ef; pointer-events: none; }
@@ -198,10 +197,10 @@
   }
   .amf-visit-header:hover { background: #2a2a4a; }
   .amf-visit-title {
-    font-family: 'Courier New', Courier, monospace; font-size: .82rem;
+    font-family: Arial, sans-serif; font-size: .82rem;
     font-weight: 600; letter-spacing: .06em;
   }
-  .amf-visit-meta { font-size: .7rem; color: #9a8f7a; font-family: 'Courier New', Courier, monospace; }
+  .amf-visit-meta { font-size: .7rem; color: #9a8f7a; font-family: Arial, sans-serif; }
   .amf-visit-chevron { font-size: .9rem; transition: transform .2s; flex-shrink: 0; }
   .amf-visit.collapsed .amf-visit-chevron { transform: rotate(-90deg); }
   .amf-visit-body { padding: 14px 12px 8px; }
@@ -210,7 +209,7 @@
   .btn-del-visit {
     background: transparent; border: 1px solid rgba(139,26,26,.4);
     color: var(--accent); border-radius: 3px; font-size: .72rem;
-    padding: 3px 9px; cursor: pointer; font-family: 'Courier New', Courier, monospace;
+    padding: 3px 9px; cursor: pointer; font-family: Arial, sans-serif;
     transition: all .15s;
   }
   .btn-del-visit:hover { background: var(--accent); color: #fff; }
@@ -218,7 +217,7 @@
   /* ── AMF PAIR LAYOUT ── */
   .amf-pair {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 12px;
   }
@@ -232,7 +231,7 @@
 
   /* ── BUTTONS ── */
   .buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border); gap: 8px; flex-wrap: wrap; }
-  .btn { padding: 8px 20px; border-radius: 4px; font-family: Georgia, 'Times New Roman', serif; font-size: .97rem; cursor: pointer; border: none; transition: all .15s; }
+  .btn { padding: 8px 20px; border-radius: 4px; font-family: Arial, sans-serif; font-size: .97rem; cursor: pointer; border: none; transition: all .15s; }
   .btn-primary   { background: var(--ink);    color: var(--paper); }
   .btn-primary:hover   { background: var(--accent); }
   .btn-secondary { background: #fff; color: var(--ink); border: 1px solid var(--border); }
@@ -241,10 +240,10 @@
   .btn-danger:hover    { background: #fdf5f5; }
   .btn-print     { background: var(--green); color: #fff; }
   .btn-print:hover     { background: #14492a; }
-  .btn-undo { background: #fff; color: var(--gold); border: 1px solid rgba(184,134,11,.4); font-size: .82rem; padding: 6px 12px; border-radius: 4px; font-family: Georgia, 'Times New Roman', serif; cursor: pointer; transition: all .15s; }
+  .btn-undo { background: #fff; color: var(--gold); border: 1px solid rgba(184,134,11,.4); font-size: .82rem; padding: 6px 12px; border-radius: 4px; font-family: Arial, sans-serif; cursor: pointer; transition: all .15s; }
   .btn-undo:hover { background: #fffbf0; border-color: var(--gold); }
   .btn-undo:disabled { opacity: .35; cursor: not-allowed; }
-  .save-ind { font-size: .7rem; font-family: 'Courier New', Courier, monospace; color: var(--green); opacity: 0; transition: opacity .3s; }
+  .save-ind { font-size: .7rem; font-family: Arial, sans-serif; color: var(--green); opacity: 0; transition: opacity .3s; }
   .save-ind.on { opacity: 1; }
 
   /* ── PRINT ── */
@@ -259,7 +258,7 @@
       background: #fff !important; color: #000;
       font-size: 20pt;
       font-weight: 600;
-      font-family: Georgia, 'Times New Roman', serif;
+      font-family: Arial, sans-serif;
       -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
     .main { max-width: 100%; padding: 0; margin: 0; }
@@ -311,9 +310,23 @@
       margin: 0 !important;
       font-size: 20pt;
       font-weight: 600;
-      font-family: Georgia, 'Times New Roman', serif;
+      font-family: Arial, sans-serif;
       -webkit-appearance: none; appearance: none;
       width: 100%;
+    }
+    textarea {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      font-size: 20pt;
+      font-weight: 600;
+      font-family: Arial, sans-serif;
+      width: 100%;
+      resize: none;
+      overflow: visible;
+      min-height: 0;
+      height: auto;
     }
     table.data input, table.data select {
       font-size: 20pt !important;
@@ -335,7 +348,7 @@
     .amf-visit-body { padding: 6pt 6pt 4pt; }
 
     /* AMF 4-column grid */
-    .amf-pair { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 4pt; margin-bottom: 6pt; }
+    .amf-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4pt; margin-bottom: 6pt; }
     .amf-pair .card { margin-bottom: 0; break-inside: avoid; }
 
     /* Checklist */
@@ -408,6 +421,16 @@
       <li data-idx="12"><input type="checkbox"><span>Copy of VM-SO (2 &amp; 3) which was submitted to RO/DEO</span></li>
     </ul>
   </div>
+  <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_0" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(0)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
     <div class="btn-group"><span class="save-ind" id="save0">✓ Saved</span><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -430,6 +453,16 @@
       <tfoot><tr><td>GRAND TOTAL</td><td id="ftMale">—</td><td id="ftFemale">—</td><td id="ftTG">—</td><td id="ftTotal">—</td></tr></tfoot>
     </table>
   </div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_1" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(1)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
     <div class="btn-group"><span class="save-ind" id="save1">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -443,7 +476,7 @@
   <!-- Add new visit bar -->
   <div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-      <label style="font-family:'Courier New',Courier,monospace;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-light);white-space:nowrap;">New Visit Date</label>
+      <label style="font-family:Arial, sans-serif;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-light);white-space:nowrap;">New Visit Date</label>
       <input type="date" id="amfNewDate" style="max-width:180px;">
     </div>
     <button type="button" class="btn btn-primary" onclick="addAMFVisit()" style="white-space:nowrap;">+ Add Visit</button>
@@ -452,6 +485,16 @@
   <!-- Visits container — populated by JS -->
   <div id="amfVisitsContainer"></div>
 
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_2" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"></div>
     <div class="btn-group"><span class="save-ind" id="save2">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -484,6 +527,16 @@
     <div class="card-title">Booth Level Officers (BLO)</div>
     <table class="data"><thead><tr><th>PS No.</th><th>BLO Name</th><th>BLO Number</th></tr></thead><tbody id="bloTbody"></tbody></table>
   </div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_3" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(3)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
     <div class="btn-group"><span class="save-ind" id="save3">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -499,6 +552,16 @@
       <tbody id="prePollBody"></tbody>
     </table>
   </div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_4" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(4)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
     <div class="btn-group"><span class="save-ind" id="save4">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -513,6 +576,16 @@
       <thead><tr><th style="width:44px">Sl.</th><th style="width:36px">✓</th><th class="left">Item</th><th style="width:110px">Status</th><th style="width:180px">Remarks</th></tr></thead>
       <tbody id="pollEveBody"></tbody>
     </table>
+  </div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_5" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(5)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
@@ -571,6 +644,16 @@
       <tbody id="evmDepBody"></tbody>
     </table>
   </div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_6" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(6)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
     <div class="btn-group"><span class="save-ind" id="save6">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -587,6 +670,16 @@
     </table>
   </div>
   <div class="mock-cards" id="mockCards"></div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_7" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(7)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
     <div class="btn-group"><span class="save-ind" id="save7">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -603,6 +696,16 @@
     </table>
   </div>
   <div class="mock-cards" id="actualCards"></div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_8" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(8)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
     <div class="btn-group"><span class="save-ind" id="save8">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -619,6 +722,16 @@
     </table>
   </div>
   <div class="mock-cards" id="endPollCards"></div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_9" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(9)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
     <div class="btn-group"><span class="save-ind" id="save9">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -641,8 +754,8 @@
   <!-- Mobile -->
   <div class="vt-mobile">
     <div class="card" style="padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-      <label style="font-family:'Courier New',Courier,monospace;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-light);white-space:nowrap;">Polling Station</label>
-      <select id="vtPsPicker" style="max-width:140px;padding:6px 8px;border:1px solid var(--border);border-radius:3px;background:var(--paper);font-family:'Courier New',Courier,monospace;font-size:.88rem;"></select>
+      <label style="font-family:Arial, sans-serif;font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-light);white-space:nowrap;">Polling Station</label>
+      <select id="vtPsPicker" style="max-width:140px;padding:6px 8px;border:1px solid var(--border);border-radius:3px;background:var(--paper);font-family:Arial, sans-serif;font-size:.88rem;"></select>
     </div>
     <div class="card" style="padding:0;overflow:hidden;">
       <table class="vt-mob-table">
@@ -650,6 +763,16 @@
         <tbody id="vtMobileBody"></tbody>
       </table>
     </div>
+  </div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_10" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetVT()">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
@@ -675,6 +798,16 @@
       <li data-idx="9"><input type="checkbox"><span>PS-wise poll day activities report by SO</span></li>
     </ul>
   </div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_11" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(11)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
     <div class="btn-group"><span class="save-ind" id="save11">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
@@ -698,6 +831,16 @@
       <li data-idx="8"><input type="checkbox"><span>Any other reporting unwarranted event and immediate response/corrective measures</span></li>
       <li data-idx="9"><input type="checkbox"><span>PS-wise poll day activities report by SO</span></li>
     </ul>
+  </div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_11" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(11)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
@@ -812,6 +955,7 @@ function bindField(el, pgIdx, cb) {
   };
   el.addEventListener('change', handler);
   if (el.type!=='checkbox'&&el.type!=='radio') el.addEventListener('input', handler);
+  if (el.tagName === 'TEXTAREA') el.addEventListener('input', handler);
 }
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
@@ -848,7 +992,7 @@ function updateProgress() {
 function resetPage(p) {
   if (!confirm('Reset all data on this page?')) return;
   const pg = document.querySelector(`.page[data-page="${p}"]`);
-  pg.querySelectorAll('input,select').forEach(el => {
+  pg.querySelectorAll('input,select,textarea').forEach(el => {
     const key = el.dataset.key || el.name;
     if (el.type==='checkbox'||el.type==='radio') el.checked = false;
     else el.value = '';
@@ -941,7 +1085,7 @@ function buildAMFTable(ps, visitId) {
       // Text answer field
       tr.innerHTML = `<td style="font-size:.86rem">${item}</td>
         <td><input type="text" data-key="${name}"
-          style="border:none;background:transparent;font-family:Georgia,'Times New Roman',serif;font-size:.86rem;padding:3px 4px;width:100%;"
+          style="border:none;background:transparent;font-family:Arial, sans-serif;font-size:.86rem;padding:3px 4px;width:100%;"
           placeholder="Enter details…"></td>`;
       tbody.appendChild(tr);
       bindField(tr.querySelector('input'), 2);
@@ -983,7 +1127,7 @@ function buildAMFTable(ps, visitId) {
           subTr.innerHTML = `
             <td style="font-size:.82rem;padding-left:22px;color:var(--ink-light);">↳ ${sub.label}</td>
             <td><input type="number" data-key="${subKey}" min="0" placeholder="—"
-              style="border:none;background:transparent;font-family:'Courier New',Courier,monospace;font-size:.82rem;text-align:center;padding:3px 4px;width:100%;"></td>`;
+              style="border:none;background:transparent;font-family:Arial, sans-serif;font-size:.82rem;text-align:center;padding:3px 4px;width:100%;"></td>`;
           tbody.appendChild(subTr);
           bindField(subTr.querySelector('input'), 2);
         });
@@ -1117,10 +1261,10 @@ function initPage4() {
     // Name row — category cell spans 2 rows
     const trN = document.createElement('tr');
     trN.innerHTML = `
-      <td rowspan="2" style="font-size:.85rem;color:var(--accent);font-family:'Courier New',Courier,monospace;font-weight:700;vertical-align:middle;background:var(--check-bg);border-right:2px solid var(--border);">${row.label}</td>
+      <td rowspan="2" style="font-size:.85rem;color:var(--accent);font-family:Arial, sans-serif;font-weight:700;vertical-align:middle;background:var(--check-bg);border-right:2px solid var(--border);">${row.label}</td>
       ${VENUES.map(v => {
         const k = `contact_${row.key}_${v.replace(/\s+/g,'_')}_name`;
-        return `<td><div style="font-size:.62rem;font-family:'Courier New',Courier,monospace;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Name</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter name"></td>`;
+        return `<td><div style="font-size:.62rem;font-family:Arial, sans-serif;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Name</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter name"></td>`;
       }).join('')}`;
     vb.appendChild(trN);
     trN.querySelectorAll('input').forEach(el => bindField(el, 3));
@@ -1129,7 +1273,7 @@ function initPage4() {
     const trNum = document.createElement('tr');
     trNum.innerHTML = VENUES.map(v => {
       const k = `contact_${row.key}_${v.replace(/\s+/g,'_')}_num`;
-      return `<td style="border-top:1px dashed var(--border);"><div style="font-size:.62rem;font-family:'Courier New',Courier,monospace;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Number</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter number"></td>`;
+      return `<td style="border-top:1px dashed var(--border);"><div style="font-size:.62rem;font-family:Arial, sans-serif;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Number</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter number"></td>`;
     }).join('');
     vb.appendChild(trNum);
     trNum.querySelectorAll('input').forEach(el => bindField(el, 3));
@@ -1476,6 +1620,20 @@ function undoLast() {
   showSavedGlobal && showSavedGlobal();
 }
 
+// ── REMARKS FIELDS ───────────────────────────────────────────────────────────
+function initRemarks() {
+  document.querySelectorAll('textarea[data-key]').forEach((el, i) => {
+    const key = el.dataset.key;
+    const val = ld(key, null);
+    if (val !== null) el.value = val;
+    el.addEventListener('input', () => {
+      pushUndo(key, ld(key, ''));
+      sv(key, el.value);
+      showSavedGlobal();
+    });
+  });
+}
+
 // ── BOOT ──────────────────────────────────────────────────────────────────────
 buildProgress();
 updateProgress();
@@ -1492,6 +1650,7 @@ initMockPage('endPollHead', 'endPollBody', 'endPollCards', END_POLL_ROWS,    9);
 initPage9();
 initPage11();
 initPage12();
+initRemarks();
 </script>
 
 <!-- ══ PWA: INSTALL PROMPT BANNER ══ -->
@@ -1500,16 +1659,50 @@ initPage12();
   display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
   box-shadow:0 -2px 16px rgba(0,0,0,.3);">
   <div>
-    <div style="font-family:Georgia,'Times New Roman',serif;font-size:1.05rem;font-weight:600;">Install WB GELA 2026</div>
-    <div style="font-family:'Courier New',Courier,monospace;font-size:.7rem;color:#9a8f7a;margin-top:2px;">Add to home screen for offline access</div>
+    <div style="font-family:Arial, sans-serif;font-size:1.05rem;font-weight:600;">Install WB GELA 2026</div>
+    <div style="font-family:Arial, sans-serif;font-size:.7rem;color:#9a8f7a;margin-top:2px;">Add to home screen for offline access</div>
   </div>
   <div style="display:flex;gap:8px;">
-    <button onclick="installApp()" style="padding:8px 18px;background:#1a5c2e;color:#fff;border:none;border-radius:4px;font-family:Georgia,'Times New Roman',serif;font-size:.97rem;cursor:pointer;">Install</button>
-    <button onclick="document.getElementById('installBanner').style.display='none'" style="padding:8px 14px;background:transparent;color:#9a8f7a;border:1px solid #3d3d5c;border-radius:4px;font-family:Georgia,'Times New Roman',serif;font-size:.97rem;cursor:pointer;">Not now</button>
+    <button onclick="installApp()" style="padding:8px 18px;background:#1a5c2e;color:#fff;border:none;border-radius:4px;font-family:Arial, sans-serif;font-size:.97rem;cursor:pointer;">Install</button>
+    <button onclick="document.getElementById('installBanner').style.display='none'" style="padding:8px 14px;background:transparent;color:#9a8f7a;border:1px solid #3d3d5c;border-radius:4px;font-family:Arial, sans-serif;font-size:.97rem;cursor:pointer;">Not now</button>
   </div>
 </div>
 
 <script>
+// ── SERVICE WORKER ────────────────────────────────────────────────────────────
+const SW_CODE = `
+const CACHE = 'wbgela2026-v1';
+const FONTS = [
+  'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap'
+];
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(FONTS).catch(()=>{}))
+  );
+  self.skipWaiting();
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(clients.claim());
+});
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(r => r || fetch(e.request).then(res => {
+      if (res && res.status === 200 && e.request.method === 'GET') {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+      }
+      return res;
+    }).catch(() => caches.match(e.request)))
+  );
+});
+`;
+
+if ('serviceWorker' in navigator) {
+  const blob = new Blob([SW_CODE], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+
 // ── INSTALL PROMPT ────────────────────────────────────────────────────────────
 let deferredPrompt = null;
 const banner = document.getElementById('installBanner');

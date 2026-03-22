@@ -295,40 +295,40 @@
     }
     .main { max-width: 100%; padding: 0; margin: 0; }
 
-    /* Continuous print — natural page breaks allowed everywhere */
+    /* Full continuous print — break anywhere needed, minimise blank space */
     .page { display: block !important; break-after: auto; }
     .page-title {
-      border-left: 4pt solid #000; padding: 3pt 0 3pt 8pt;
-      margin-top: 14pt; margin-bottom: 8pt;
-      border-top: 2pt solid #000; padding-top: 8pt;
+      border-left: 3pt solid #000; padding: 2pt 0 2pt 6pt;
+      margin-top: 8pt; margin-bottom: 3pt;
+      border-top: 1.5pt solid #000; padding-top: 5pt;
     }
-    .page:first-of-type .page-title { border-top: none; margin-top: 0; padding-top: 3pt; }
-    .page-title h2 { font-size: 14pt; font-weight: 800; }
-    .page-title .sub { font-size: 9pt; font-weight: 600; color: #444; margin-top: 1pt; }
+    .page:first-of-type .page-title { border-top: none; margin-top: 0; padding-top: 2pt; }
+    .page-title h2 { font-size: 13pt; font-weight: 800; margin: 0; line-height: 1.2; }
+    .page-title .sub { font-size: 8pt; font-weight: 600; color: #444; margin-top: 1pt; }
 
-    /* Cards — allow breaks inside */
-    .card { box-shadow: none !important; border: 1pt solid #aaa; padding: 5pt 6pt; margin-bottom: 5pt; border-radius: 0; }
-    .card-title { font-size: 11pt; font-weight: 800; padding-bottom: 2pt; margin-bottom: 4pt; border-bottom: 1pt solid #888; }
+    /* Cards — tight, no forced breaks */
+    .card { box-shadow: none !important; border: 1pt solid #aaa; padding: 3pt 5pt; margin-bottom: 3pt; border-radius: 0; }
+    .card-title { font-size: 10pt; font-weight: 800; padding-bottom: 1pt; margin-bottom: 3pt; border-bottom: 1pt solid #888; }
 
-    /* Tables — allow breaks freely, rows break naturally */
+    /* Tables — fully continuous, break anywhere */
     table { border-collapse: collapse; width: 100%; table-layout: auto; }
     tr { break-inside: auto; }
     th, td { break-inside: auto; }
 
-    table.data { font-size: 11pt; font-weight: 600; border: 1.5pt solid #000; }
+    table.data { font-size: 10pt; font-weight: 600; border: 1pt solid #000; }
     table.data thead th {
       background: #1a1a2e !important; color: #fff !important;
-      font-size: 10pt; font-weight: 700; padding: 4pt 5pt;
-      white-space: normal; word-wrap: break-word; border: 1pt solid #2e2e4a;
+      font-size: 9pt; font-weight: 700; padding: 2pt 4pt;
+      white-space: normal; word-wrap: break-word; border: 0.5pt solid #2e2e4a;
     }
     table.data thead th.left { text-align: left; }
     table.data td {
-      padding: 4pt 5pt; font-size: 11pt; font-weight: 600;
+      padding: 2pt 4pt; font-size: 10pt; font-weight: 600;
       vertical-align: top; white-space: normal;
       word-wrap: break-word; overflow-wrap: break-word;
-      border: 1pt solid #888;
+      border: 0.5pt solid #999;
     }
-    table.data tfoot td { background: #e0e0e0 !important; font-size: 10pt; font-weight: 800; padding: 4pt 5pt; border: 1pt solid #888; }
+    table.data tfoot td { background: #e0e0e0 !important; font-size: 9pt; font-weight: 800; padding: 2pt 4pt; border: 0.5pt solid #999; }
     table.data tbody tr:nth-child(even) { background: #f5f5f5 !important; }
 
     /* ALL inputs/selects hidden in print — replaced by .print-mirror / .select-mirror spans */
@@ -366,11 +366,11 @@
     .rg label { font-size: 10pt; font-weight: 700; color: #000 !important; }
 
     /* AMF */
-    .amf-visit { border: 1pt solid #999; margin-bottom: 6pt; }
+    .amf-visit { border: 0.5pt solid #999; margin-bottom: 3pt; }
     .amf-visit.collapsed .amf-visit-body { display: block !important; }
-    .amf-visit-header { background: #1a1a2e !important; color: #fff !important; padding: 4pt 8pt; }
-    .amf-visit-title { font-size: 11pt; font-weight: 700; }
-    .amf-visit-body { padding: 5pt 5pt 3pt; }
+    .amf-visit-header { background: #1a1a2e !important; color: #fff !important; padding: 2pt 6pt; }
+    .amf-visit-title { font-size: 10pt; font-weight: 700; }
+    .amf-visit-body { padding: 3pt 4pt 2pt; }
     .amf-visit-body textarea {
       display: block !important;
       white-space: pre-wrap !important; word-break: break-word !important;
@@ -378,32 +378,33 @@
       height: auto !important; min-height: 0 !important;
       width: 100% !important; border: none !important;
       background: transparent !important; padding: 0 !important;
-      font-size: 11pt !important; font-weight: 600 !important;
+      font-size: 10pt !important; font-weight: 600 !important;
       font-family: Arial, sans-serif !important;
     }
-    .amf-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4pt; margin-bottom: 5pt; }
+    .amf-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 3pt; margin-bottom: 3pt; }
     .amf-pair .card { margin-bottom: 0; }
 
     /* EVM */
-    .subsec-title { background: #333 !important; color: #fff !important; font-size: 10pt; font-weight: 700; padding: 3pt 6pt; margin: 5pt 0 3pt; }
-    .subsec-divider { border-top: 1pt dashed #bbb; margin: 5pt 0; }
-    .field-row label { font-size: 10pt; font-weight: 700; }
+    .subsec-title { background: #333 !important; color: #fff !important; font-size: 9pt; font-weight: 700; padding: 2pt 5pt; margin: 3pt 0 2pt; }
+    .subsec-divider { border-top: 0.5pt dashed #bbb; margin: 3pt 0; }
+    .field-row { margin-bottom: 3pt; }
+    .field-row label { font-size: 9pt; font-weight: 700; }
     .chg-table-wrap { overflow: visible; }
-    .chg-table th { font-size: 9pt !important; font-weight: 700 !important; padding: 3pt 4pt !important; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
-    .chg-table td { font-size: 10pt !important; font-weight: 600 !important; padding: 3pt 4pt !important; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
+    .chg-table th { font-size: 8pt !important; font-weight: 700 !important; padding: 2pt 3pt !important; white-space: normal; word-wrap: break-word; border: 0.5pt solid #888; }
+    .chg-table td { font-size: 9pt !important; font-weight: 600 !important; padding: 2pt 3pt !important; white-space: normal; word-wrap: break-word; border: 0.5pt solid #888; }
 
     /* Mock Poll */
-    .mock-table { font-size: 10pt; font-weight: 600; border: 1.5pt solid #000; border-collapse: collapse; width: 100%; }
-    .mock-table th { font-size: 9pt; font-weight: 700; padding: 4pt; background: #1a1a2e !important; color: #fff !important; white-space: normal; word-wrap: break-word; border: 1pt solid #2e2e4a; }
-    .mock-table td { padding: 3pt 4pt; font-size: 10pt; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
-    .mock-table td.item-label { font-size: 10pt; font-weight: 700; }
+    .mock-table { font-size: 9pt; font-weight: 600; border: 1pt solid #000; border-collapse: collapse; width: 100%; }
+    .mock-table th { font-size: 8pt; font-weight: 700; padding: 2pt 3pt; background: #1a1a2e !important; color: #fff !important; white-space: normal; word-wrap: break-word; border: 0.5pt solid #2e2e4a; }
+    .mock-table td { padding: 2pt 3pt; font-size: 9pt; white-space: normal; word-wrap: break-word; border: 0.5pt solid #888; }
+    .mock-table td.item-label { font-size: 9pt; font-weight: 700; }
 
     /* Voter Turnout */
-    .vt-table { font-size: 9pt; font-weight: 600; border: 1.5pt solid #000; border-collapse: collapse; width: 100%; }
-    .vt-table th { font-size: 8pt; font-weight: 700; padding: 3pt; background: #1a1a2e !important; color: #fff !important; border: 1pt solid #2e2e4a; }
+    .vt-table { font-size: 8pt; font-weight: 600; border: 1pt solid #000; border-collapse: collapse; width: 100%; }
+    .vt-table th { font-size: 7pt; font-weight: 700; padding: 2pt; background: #1a1a2e !important; color: #fff !important; border: 0.5pt solid #2e2e4a; }
     .vt-table th.vt-ps-hd { background: #8b1a1a !important; }
-    .vt-table td { padding: 2pt; font-size: 9pt; border: 1pt solid #888; }
-    .vt-table td.vt-lbl { font-size: 9pt; font-weight: 800; padding: 3pt 4pt; background: #ede6d6 !important; border: 1pt solid #888; }
+    .vt-table td { padding: 1pt 2pt; font-size: 8pt; border: 0.5pt solid #999; }
+    .vt-table td.vt-lbl { font-size: 8pt; font-weight: 800; padding: 2pt 3pt; background: #ede6d6 !important; border: 0.5pt solid #999; }
     .vt-table tr.vt-tot-row td { background: #f0ebe0 !important; }
     .vt-table tr.vt-tot-row td.vt-lbl { background: #1a1a2e !important; color: #fff !important; }
   }
@@ -582,13 +583,16 @@
   <div class="card">
     <div class="card-title">General</div>
     <table class="data">
-      <thead><tr><th class="left" style="width:200px">Role</th><th class="left">Name</th><th class="left">Number</th></tr></thead>
-      <tbody>
-        <tr><td>RO (Returning Officer)</td><td><input type="text" data-key="c_ro_name" class="ltext" placeholder="Name"></td><td><input type="text" data-key="c_ro_num" class="ltext" placeholder="Number"></td></tr>
-        <tr><td>Hospital</td><td><input type="text" data-key="c_hospital_name" class="ltext" placeholder="Name"></td><td><input type="text" data-key="c_hospital_num" class="ltext" placeholder="Number"></td></tr>
-        <tr><td>IC of Nimta PS</td><td><input type="text" data-key="c_ic_nimta_name" class="ltext" placeholder="Name"></td><td><input type="text" data-key="c_ic_nimta_num" class="ltext" placeholder="Number"></td></tr>
+      <thead><tr><th class="left" style="width:200px">Role</th><th class="left">Name</th><th class="left">Number</th><th class="no-print" style="width:30px;"></th></tr></thead>
+      <tbody id="generalTbody">
+        <tr><td><input type="text" data-key="c_ro_role" class="ltext" value="RO (Returning Officer)" placeholder="Role"></td><td><input type="text" data-key="c_ro_name" class="ltext" placeholder="Name"></td><td><input type="text" data-key="c_ro_num" class="ltext" placeholder="Number"></td><td class="row-del-td no-print" style="text-align:center;padding:3px;border:1px solid var(--border);"><button type="button" onclick="delGeneralRow(this)" style="background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;">✕</button></td></tr>
+        <tr><td><input type="text" data-key="c_hospital_role" class="ltext" value="Hospital" placeholder="Role"></td><td><input type="text" data-key="c_hospital_name" class="ltext" placeholder="Name"></td><td><input type="text" data-key="c_hospital_num" class="ltext" placeholder="Number"></td><td class="row-del-td no-print" style="text-align:center;padding:3px;border:1px solid var(--border);"><button type="button" onclick="delGeneralRow(this)" style="background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;">✕</button></td></tr>
+        <tr><td><input type="text" data-key="c_ic_nimta_role" class="ltext" value="IC of Nimta PS" placeholder="Role"></td><td><input type="text" data-key="c_ic_nimta_name" class="ltext" placeholder="Name"></td><td><input type="text" data-key="c_ic_nimta_num" class="ltext" placeholder="Number"></td><td class="row-del-td no-print" style="text-align:center;padding:3px;border:1px solid var(--border);"><button type="button" onclick="delGeneralRow(this)" style="background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;">✕</button></td></tr>
       </tbody>
     </table>
+    <div class="add-row-wrap no-print" style="margin-top:4px;">
+      <button type="button" onclick="addGeneralRow()" style="background:var(--paper);border:1px dashed var(--border);color:var(--ink-light);border-radius:4px;padding:5px 14px;cursor:pointer;font-size:.8rem;font-weight:600;font-family:Arial,sans-serif;">+ Add Row</button>
+    </div>
   </div>
   <div class="card">
     <div class="card-title">Infrastructure &amp; Support Contacts</div>
@@ -1549,7 +1553,36 @@ function initPage3() {
 }
 
 // ── PAGE 4: CONTACTS ──────────────────────────────────────────────────────────
+function addGeneralRow() {
+  const tbody = document.getElementById('generalTbody');
+  const idx = Date.now();
+  const roleKey = `c_general_role_${idx}`;
+  const nameKey = `c_general_name_${idx}`;
+  const numKey  = `c_general_num_${idx}`;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" data-key="${roleKey}" class="ltext" placeholder="Role"></td>
+    <td><input type="text" data-key="${nameKey}" class="ltext" placeholder="Name"></td>
+    <td><input type="text" data-key="${numKey}"  class="ltext" placeholder="Number"></td>
+    <td class="row-del-td no-print" style="text-align:center;padding:3px;border:1px solid var(--border);">
+      <button type="button" onclick="delGeneralRow(this)" style="background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;">✕</button>
+    </td>`;
+  tbody.appendChild(tr);
+  tr.querySelectorAll('input').forEach(el => bindField(el, 4));
+  refreshPrintMirrors();
+}
+
+function delGeneralRow(btn) {
+  if (!confirm('Delete this row?')) return;
+  const row = btn.closest('tr');
+  row.querySelectorAll('[data-key]').forEach(el => sv(el.dataset.key, ''));
+  row.remove();
+}
+
 function initPage4() {
+  // Bind General section inputs (role, name, number for existing rows)
+  document.querySelectorAll('#generalTbody input[data-key]').forEach(el => bindField(el, 4));
+  // Also bind other static page-4 inputs
   document.querySelectorAll('[data-page="4"] input[data-key]').forEach(el => bindField(el, 4));
 
   // Venue table: Category (rowspan=2) | Nimta Jibantosh | Nimta High
@@ -2104,7 +2137,7 @@ const NO_ADD_DELETE = new Set([
   'votersTbody','prePollBody','pollEveBody','evmBody','evmDepBody',
   'chgMockBody','chgActualBody','mockBody','actualBody','endPollBody',
   'vtDesktopBody1','vtDesktopBody2','vtMobileBody','vtSummaryBody',
-  'sectorPSBody'
+  'sectorPSBody','generalTbody'
 ]);
 
 function makeDeleteBtn(row) {

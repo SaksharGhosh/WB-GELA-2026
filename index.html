@@ -92,7 +92,7 @@
   table.data thead th.left { text-align: left; }
   table.data tbody tr { border-bottom: 1px solid var(--border); }
   table.data tbody tr:hover { background: var(--check-bg); }
-  table.data td { padding: 8px 10px; vertical-align: top; font-size: 1rem; border: 1px solid var(--border); word-break: break-word; overflow-wrap: break-word; }
+  table.data td { padding: 8px 10px; vertical-align: middle; font-size: 1rem; border: 1px solid var(--border); }
   table.data td.mono { font-family: Arial, sans-serif; font-size: .85rem; font-weight: 600; color: var(--ink-light); text-align: center; border: 1px solid var(--border); }
   table.data tfoot td { background: var(--paper-dark); font-weight: 700; font-family: Arial, sans-serif; font-size: .82rem; padding: 9px 10px; border-top: 2px solid var(--border); border: 1px solid var(--border); }
 
@@ -104,18 +104,17 @@
   }
   input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(139,26,26,.1); background: #fff; }
   table.data input, table.data select { border: none; background: transparent; font-family: Arial, sans-serif; font-size: .88rem; font-weight: 500; text-align: center; padding: 4px 2px; width: 100%; }
-  table.data input[type="text"].ltext { white-space: normal; word-break: break-word; overflow-wrap: break-word; overflow: visible; height: auto; min-height: 1.8em; }
-  /* Auto-expanding textarea replacement for long text in tables */
-  table.data textarea.ltext {
-    border: none; background: transparent;
-    font-family: Arial, sans-serif; font-size: .88rem; font-weight: 500;
-    text-align: left; padding: 4px 2px; width: 100%;
-    resize: none; overflow: hidden; min-height: 1.6em; height: auto;
-    line-height: 1.4; display: block; word-break: break-word;
-  }
-  table.data textarea.ltext:focus { background: #fffbf0; outline: 1px solid var(--gold); }
   table.data input:focus, table.data select:focus { background: #fffbf0; outline: 1px solid var(--gold); }
   table.data input.ltext, table.data select.ltext { text-align: left; font-family: Arial, sans-serif; font-size: 1rem; font-weight: 600; }
+  /* Auto-expanding textarea only for fields that need long text */
+  table.data textarea.ltext-long {
+    border: none; background: transparent;
+    font-family: Arial, sans-serif; font-size: .88rem; font-weight: 600;
+    text-align: left; padding: 4px 2px; width: 100%;
+    resize: none; overflow: hidden; min-height: 1.8em; height: auto;
+    line-height: 1.4; display: block; word-break: break-word; box-sizing: border-box;
+  }
+  table.data textarea.ltext-long:focus { background: #fffbf0; outline: 1px solid var(--gold); }
   table.data input.total { color: var(--accent); font-weight: 700; }
 
   /* ── CHECKLIST ── */
@@ -256,158 +255,126 @@
   .save-ind { font-size: .7rem; font-family: Arial, sans-serif; color: var(--green); opacity: 0; transition: opacity .3s; }
   .save-ind.on { opacity: 1; }
 
+  .print-mirror, .select-mirror { display: none; }
+  .no-print { display: block; }
+
   /* ── PRINT ── */
   @media print {
-    @page { size: A4 portrait; margin: 8mm 8mm; }
+    @page { size: A4 portrait; margin: 1cm; }
 
-    .app-header, .progress-wrap, .buttons, .banner, .vt-mobile, .mock-cards { display: none !important; }
+    .app-header, .progress-wrap, .buttons, .banner, .vt-mobile, .mock-cards,
+    .btn-undo, .btn-danger, .btn-print, .amf-visit-actions, .amf-visit-chevron,
+    .save-ind, .save-global, .no-print, .row-del-td, .del-th, .add-row-wrap { display: none !important; }
+
     .vt-desktop { display: block !important; overflow: visible !important; }
     .mock-table-wrap { display: block !important; }
 
     html, body {
       background: #fff !important; color: #000;
-      font-size: 18pt;
-      font-weight: 600;
+      font-size: 11pt; font-weight: 600;
       font-family: Arial, sans-serif;
       -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
     .main { max-width: 100%; padding: 0; margin: 0; }
 
-    /* All pages visible, continuous flow */
-    .page { display: block !important; page-break-after: auto; break-after: auto; page-break-inside: avoid; break-inside: avoid; }
-
-    /* Section separators */
+    /* Continuous print — no forced page breaks, no breaks inside sections */
+    .page { display: block !important; break-after: auto; break-inside: avoid; }
     .page-title {
-      border-left: 4pt solid #000; padding: 3pt 0 3pt 8pt; margin-bottom: 10pt;
-      margin-top: 14pt; border-top: 2pt solid #000; padding-top: 10pt;
+      border-left: 4pt solid #000; padding: 3pt 0 3pt 8pt;
+      margin-top: 14pt; margin-bottom: 8pt;
+      border-top: 2pt solid #000; padding-top: 8pt;
     }
     .page:first-of-type .page-title { border-top: none; margin-top: 0; padding-top: 3pt; }
-    .page-title h2 { font-size: 22pt; font-weight: 800; }
-    .page-title .sub { font-size: 18pt; font-weight: 600; color: #444; margin-top: 1pt; }
+    .page-title h2 { font-size: 14pt; font-weight: 800; }
+    .page-title .sub { font-size: 9pt; font-weight: 600; color: #444; margin-top: 1pt; }
 
     /* Cards */
-    .card { box-shadow: none !important; border: 1pt solid #aaa; padding: 6pt 8pt; margin-bottom: 6pt; border-radius: 0; break-inside: avoid; }
-    .card-title { font-size: 18pt; font-weight: 800; padding-bottom: 3pt; margin-bottom: 5pt; border-bottom: 1.5pt solid #888; }
-    .ps-badge { background: #222 !important; color: #fff !important; font-size: 18pt; font-weight: 700; padding: 1pt 4pt; }
+    .card { box-shadow: none !important; border: 1pt solid #aaa; padding: 5pt 6pt; margin-bottom: 5pt; border-radius: 0; break-inside: avoid; }
+    .card-title { font-size: 11pt; font-weight: 800; padding-bottom: 2pt; margin-bottom: 4pt; border-bottom: 1pt solid #888; }
 
-    /* Standard data tables */
-    table.data { font-size: 18pt; font-weight: 600; table-layout: auto; border-collapse: collapse; width: 100%; border: 2pt solid #000; word-wrap: break-word; overflow-wrap: break-word; }
+    /* Tables — no breaks inside, auto layout, borders */
+    table { page-break-inside: avoid; break-inside: avoid; border-collapse: collapse; width: 100%; table-layout: auto; }
+    tr { page-break-inside: avoid; break-inside: avoid; }
+    th, td { page-break-inside: avoid; break-inside: avoid; }
+
+    table.data { font-size: 11pt; font-weight: 600; border: 1.5pt solid #000; }
     table.data thead th {
       background: #1a1a2e !important; color: #fff !important;
-      font-size: 18pt; font-weight: 700; padding: 5pt 6pt; line-height: 1.25;
-      white-space: normal; word-wrap: break-word; overflow-wrap: break-word;
-      border: 1pt solid #2e2e4a; width: auto;
+      font-size: 10pt; font-weight: 700; padding: 4pt 5pt;
+      white-space: normal; word-wrap: break-word; border: 1pt solid #2e2e4a;
     }
     table.data thead th.left { text-align: left; }
-    table.data td { padding: 5pt 6pt; font-size: 18pt; font-weight: 600; vertical-align: middle; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; border: 1pt solid #888; width: auto; }
-    table.data td.mono { font-size: 18pt; font-weight: 700; white-space: normal; border: 1pt solid #888; width: auto; }
-    table.data tfoot td { background: #e0e0e0 !important; font-size: 18pt; font-weight: 800; padding: 5pt 6pt; white-space: normal; border: 1pt solid #888; }
+    table.data td {
+      padding: 4pt 5pt; font-size: 11pt; font-weight: 600;
+      vertical-align: top; white-space: normal;
+      word-wrap: break-word; overflow-wrap: break-word;
+      border: 1pt solid #888;
+    }
+    table.data tfoot td { background: #e0e0e0 !important; font-size: 10pt; font-weight: 800; padding: 4pt 5pt; border: 1pt solid #888; }
     table.data tbody tr:nth-child(even) { background: #f5f5f5 !important; }
-    table { page-break-inside: auto; } tr { page-break-inside: avoid; }
 
-    /* Override any inline width styles on th/td */
-    table.data th[style], table.data td[style] { width: auto !important; min-width: 0 !important; max-width: none !important; }
-    .mock-table th[style], .mock-table td[style] { width: auto !important; }
-    .vt-table th[style], .vt-table td[style]   { width: auto !important; }
-    .chg-table th[style], .chg-table td[style] { width: auto !important; }
-
-    /* INPUTS — plain text, no underline, no blank space */
-    input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], select {
-      border: none !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      font-size: 18pt;
-      font-weight: 600;
-      font-family: Arial, sans-serif;
-      -webkit-appearance: none; appearance: none;
-      width: 100%;
-    }
+    /* ALL inputs/selects hidden in print — replaced by .print-mirror / .select-mirror spans */
+    input, select { display: none !important; }
     textarea {
-      border: none !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-      font-size: 18pt;
-      font-weight: 600;
-      font-family: Arial, sans-serif;
-      width: 100%;
-      resize: none;
-      overflow: visible;
-      min-height: 0;
-      height: auto;
-    }
-    /* Textareas inside table cells — show full content, no clipping */
-    table.data textarea.ltext {
-      font-size: 18pt !important;
-      font-weight: 600 !important;
-      border: none !important;
-      background: transparent !important;
-      padding: 0 !important;
-      height: auto !important;
-      min-height: 0 !important;
-      overflow: visible !important;
-      white-space: pre-wrap !important;
-      word-break: break-word !important;
-      display: block;
-      width: 100%;
-    }
-    table.data input, table.data select {
-      font-size: 18pt !important;
-      font-weight: 600 !important;
-      border: none !important;
-      background: transparent !important;
-      padding: 0 !important;
-    }
-    table.data input.total, table.data input.ro-tot, table.data input.ro-grand {
-      font-weight: 800 !important;
+      display: block; border: none !important; background: transparent !important;
+      padding: 0 !important; font-size: 11pt; font-weight: 600;
+      font-family: Arial, sans-serif; width: 100%; resize: none;
+      overflow: visible; height: auto; white-space: pre-wrap;
+      word-break: break-word;
     }
 
-    /* AMF visits */
-    .amf-visit { border: 1pt solid #999; margin-bottom: 8pt; break-inside: avoid; }
-    .amf-visit.collapsed .amf-visit-body { display: block !important; }
-    .amf-visit-header { background: #1a1a2e !important; color: #fff !important; padding: 5pt 8pt; }
-    .amf-visit-title { font-size: 18pt; font-weight: 700; }
-    .amf-visit-actions, .amf-visit-chevron { display: none; }
-    .amf-visit-body { padding: 6pt 6pt 4pt; }
-
-    /* AMF 4-column grid */
-    .amf-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4pt; margin-bottom: 6pt; }
-    .amf-pair .card { margin-bottom: 0; break-inside: avoid; }
+    /* Print mirrors — shown in print, hidden on screen */
+    .print-mirror {
+      display: block !important;
+      font-size: 11pt; font-weight: 600; font-family: Arial, sans-serif;
+      white-space: pre-wrap; word-break: break-word;
+      overflow-wrap: break-word; width: 100%; min-height: 1em;
+    }
+    .select-mirror {
+      display: block !important;
+      font-size: 11pt; font-weight: 600; font-family: Arial, sans-serif;
+    }
 
     /* Checklist */
-    .checklist li { background: transparent !important; border: none; padding: 4pt 0; margin-bottom: 1pt; }
-    .checklist li span { font-size: 18pt; font-weight: 600; color: #000 !important; }
-    .checklist li input[type="checkbox"] { width: 14pt; height: 14pt; }
+    .checklist li { background: transparent !important; border: none; padding: 3pt 0; margin-bottom: 1pt; }
+    .checklist li span { font-size: 11pt; font-weight: 600; color: #000 !important; }
+    .checklist li input[type="checkbox"] { display: inline-block !important; width: 10pt; height: 10pt; }
 
-    /* AMF radios */
-    .rg label { font-size: 18pt; font-weight: 700; color: #000 !important; }
-    tr.amf-sep td { padding: 1.5pt !important; background: #ddd !important; }
+    /* Radio buttons — keep visible, hide their mirrors */
+    input[type="radio"], input[type="checkbox"] { display: inline-block !important; }
+    .rg label { font-size: 10pt; font-weight: 700; color: #000 !important; }
 
-    /* EVM subsections */
-    .subsec-title { background: #333 !important; color: #fff !important; font-size: 18pt; font-weight: 700; padding: 3pt 6pt; margin: 6pt 0 4pt; }
-    .subsec-divider { border-top: 1pt dashed #bbb; margin: 6pt 0; }
-    .field-row label { font-size: 18pt; font-weight: 700; }
-    .chg-table th { font-size: 18pt !important; font-weight: 700 !important; padding: 4pt 5pt !important; line-height: 1.3; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
-    .chg-table td { font-size: 18pt !important; font-weight: 600 !important; padding: 4pt 5pt !important; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
+    /* AMF */
+    .amf-visit { border: 1pt solid #999; margin-bottom: 6pt; break-inside: avoid; }
+    .amf-visit.collapsed .amf-visit-body { display: block !important; }
+    .amf-visit-header { background: #1a1a2e !important; color: #fff !important; padding: 4pt 8pt; }
+    .amf-visit-title { font-size: 11pt; font-weight: 700; }
+    .amf-visit-body { padding: 5pt 5pt 3pt; }
+    .amf-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4pt; margin-bottom: 5pt; }
+    .amf-pair .card { margin-bottom: 0; break-inside: avoid; }
 
-    /* Mock Poll table */
-    .mock-table { font-size: 18pt; font-weight: 600; border: 2pt solid #000; border-collapse: collapse; table-layout: auto; width: 100%; }
-    .mock-table th { font-size: 18pt; font-weight: 700; padding: 5pt 5pt; background: #1a1a2e !important; color: #fff !important; white-space: normal; word-wrap: break-word; border: 1pt solid #2e2e4a; width: auto; }
-    .mock-table td { padding: 4pt 5pt; font-size: 18pt; white-space: normal; word-wrap: break-word; border: 1pt solid #888; width: auto; }
-    .mock-table td.item-label { font-size: 18pt; font-weight: 700; white-space: normal; word-wrap: break-word; }
-    .mock-table select, .mock-table input { font-size: 18pt !important; font-weight: 600 !important; border: none !important; background: transparent !important; padding: 0 !important; }
+    /* EVM */
+    .subsec-title { background: #333 !important; color: #fff !important; font-size: 10pt; font-weight: 700; padding: 3pt 6pt; margin: 5pt 0 3pt; }
+    .subsec-divider { border-top: 1pt dashed #bbb; margin: 5pt 0; }
+    .field-row label { font-size: 10pt; font-weight: 700; }
+    .chg-table-wrap { overflow: visible; }
+    .chg-table th { font-size: 9pt !important; font-weight: 700 !important; padding: 3pt 4pt !important; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
+    .chg-table td { font-size: 10pt !important; font-weight: 600 !important; padding: 3pt 4pt !important; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
 
-    /* Voter Turnout table */
-    .vt-table { font-size: 18pt; font-weight: 600; border: 2pt solid #000; border-collapse: collapse; table-layout: auto; width: 100%; }
-    .vt-table th { font-size: 18pt; font-weight: 700; padding: 4pt 3pt; background: #1a1a2e !important; color: #fff !important; white-space: normal; word-wrap: break-word; border: 1pt solid #2e2e4a; width: auto; }
+    /* Mock Poll */
+    .mock-table { font-size: 10pt; font-weight: 600; border: 1.5pt solid #000; border-collapse: collapse; width: 100%; }
+    .mock-table th { font-size: 9pt; font-weight: 700; padding: 4pt; background: #1a1a2e !important; color: #fff !important; white-space: normal; word-wrap: break-word; border: 1pt solid #2e2e4a; }
+    .mock-table td { padding: 3pt 4pt; font-size: 10pt; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
+    .mock-table td.item-label { font-size: 10pt; font-weight: 700; }
+
+    /* Voter Turnout */
+    .vt-table { font-size: 9pt; font-weight: 600; border: 1.5pt solid #000; border-collapse: collapse; width: 100%; }
+    .vt-table th { font-size: 8pt; font-weight: 700; padding: 3pt; background: #1a1a2e !important; color: #fff !important; border: 1pt solid #2e2e4a; }
     .vt-table th.vt-ps-hd { background: #8b1a1a !important; }
-    .vt-table td { padding: 2pt 2pt; white-space: normal; word-wrap: break-word; border: 1pt solid #888; width: auto; }
-    .vt-table td.vt-lbl { font-size: 18pt; font-weight: 800; padding: 4pt 5pt; background: #ede6d6 !important; white-space: normal; word-wrap: break-word; border: 1pt solid #888; }
+    .vt-table td { padding: 2pt; font-size: 9pt; border: 1pt solid #888; }
+    .vt-table td.vt-lbl { font-size: 9pt; font-weight: 800; padding: 3pt 4pt; background: #ede6d6 !important; border: 1pt solid #888; }
     .vt-table tr.vt-tot-row td { background: #f0ebe0 !important; }
     .vt-table tr.vt-tot-row td.vt-lbl { background: #1a1a2e !important; color: #fff !important; }
-    .vt-table input { font-size: 18pt !important; font-weight: 600 !important; border: none !important; background: transparent !important; padding: 2pt 1pt !important; }
   }
 </style>
 </head>
@@ -867,41 +834,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(11)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save11">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
-  </div>
-</div>
-
-<!-- ══ PAGE 12: REPORTS TO BE FURNISHED ══ -->
-<div class="page" data-page="11">
-  <div class="page-title"><h2>Reports to be Furnished</h2><div class="sub">CHECKLIST — REPORTING OBLIGATIONS</div></div>
-  <div class="banner"><div class="stat"><div class="lbl">Collected</div><div class="val" id="repCount">0</div></div><div class="stat"><div class="lbl">Remaining</div><div class="val hi" id="repRemain">10</div></div></div>
-  <div class="card">
-    <ul class="checklist" id="reportsChecklist">
-      <li data-idx="0"><input type="checkbox"><span>AMF report for every round of field visit</span></li>
-      <li data-idx="1"><input type="checkbox"><span>Vulnerability Mapping Report in Format VM-2 and VM-3</span></li>
-      <li data-idx="2"><input type="checkbox"><span>Completion of mock poll — issuance of Mock Poll Certificate, deletion of Mock Poll data (including removal of mock poll slips from VVPAT)</span></li>
-      <li data-idx="3"><input type="checkbox"><span>Commencement of poll</span></li>
-      <li data-idx="4"><input type="checkbox"><span>Replacement of EVM/VVPAT during mock poll and poll</span></li>
-      <li data-idx="5"><input type="checkbox"><span>Approximate voter turnout data at given intervals through appropriate channel</span></li>
-      <li data-idx="6"><input type="checkbox"><span>End of Poll — pressing of CLOSE button, sealing, departure of polling parties in the designated vehicles on designated routes only to reach the Receiving Centre etc.</span></li>
-      <li data-idx="7"><input type="checkbox"><span>Reporting of any unwarranted event and immediate response/corrective measures taken</span></li>
-      <li data-idx="8"><input type="checkbox"><span>Any other reporting unwarranted event and immediate response/corrective measures</span></li>
-      <li data-idx="9"><input type="checkbox"><span>PS-wise poll day activities report by SO</span></li>
-    </ul>
-  </div>
-    <div class="card" style="margin-top:8px;">
-    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
-    <textarea data-key="remarks_page_11" rows="3" placeholder="Add remarks for this section…"
-      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
-             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
-             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
-      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
-      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
-    ></textarea>
-  </div>
-  <div class="buttons">
-    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(11)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save11b">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-print" onclick="window.print()">🖨 Print / Save PDF</button></div>
+    <div class="btn-group"><span class="save-ind" id="save11">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-print" onclick="window.print()">🖨 Print / Save PDF</button></div>
   </div>
 </div>
 
@@ -1140,13 +1073,26 @@ function buildAMFTable(ps, visitId) {
         item === 'Lat/Long' ||
         item === 'Number and Condition of Door & Door-lock' ||
         item === 'Number and Condition of Window, Grill & Window-lock') {
-      // Text answer field
+      // Auto-expanding textarea for long text answers
       tr.innerHTML = `<td style="font-size:.86rem">${item}</td>
-        <td><input type="text" data-key="${name}"
-          style="border:none;background:transparent;font-family:Arial, sans-serif;font-size:.86rem;padding:3px 4px;width:100%;"
-          placeholder="Enter details…"></td>`;
+        <td></td>`;
       tbody.appendChild(tr);
-      bindField(tr.querySelector('input'), 2);
+      const ta = document.createElement('textarea');
+      ta.className = 'ltext-long';
+      ta.dataset.key = name;
+      ta.placeholder = 'Enter details…';
+      ta.rows = 1;
+      const stored = ld(name, null);
+      if (stored) ta.value = stored;
+      tr.cells[1].appendChild(ta);
+      const resize = () => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; };
+      ta.addEventListener('input', () => {
+        resize();
+        pushUndo(name, ld(name,''));
+        sv(name, ta.value);
+        showSaved(2);
+      });
+      setTimeout(resize, 0);
 
     } else if (item === 'Building Type') {
       // Govt. / Private radio
@@ -1726,28 +1672,6 @@ function initPage11() {
 }
 
 // ── PAGE 12: REPORTS TO BE FURNISHED ─────────────────────────────────────────
-function updateRepProgress() {
-  const cbs = document.querySelectorAll('#reportsChecklist input[type=checkbox]');
-  let n = 0;
-  cbs.forEach(cb => {
-    const li = cb.closest('li');
-    if (cb.checked) { n++; li.classList.add('checked'); }
-    else li.classList.remove('checked');
-  });
-  document.getElementById('repCount').textContent  = n;
-  document.getElementById('repRemain').textContent = cbs.length - n;
-}
-function initPage12() {
-  document.querySelectorAll('#reportsChecklist li').forEach(li => {
-    const idx = li.dataset.idx, cb = li.querySelector('input');
-    cb.dataset.key = 'rep_'+idx; cb.name = 'rep_'+idx;
-    bindField(cb, 11, updateRepProgress);
-    li.addEventListener('click', e => {
-      if (e.target !== cb) { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); }
-    });
-  });
-  updateRepProgress();
-}
 
 // ── UNDO SYSTEM ───────────────────────────────────────────────────────────────
 const UNDO_STACK = [];
@@ -1794,35 +1718,154 @@ function initRemarks() {
   });
 }
 
-// ── AUTO-EXPAND TABLE TEXTAREAS ──────────────────────────────────────────────
-function autoResize(ta) {
-  ta.style.height = 'auto';
-  ta.style.height = ta.scrollHeight + 'px';
+// ── PRINT MIRRORS (text wrapping in print) ───────────────────────────────────
+function injectPrintMirrors() {
+  // For every input[type=text] and select, inject a sibling span that shows the value
+  // The span is visible only in print (CSS hides input, shows span)
+
+  // Text inputs
+  document.querySelectorAll('input[type="text"]').forEach(inp => {
+    if (inp.dataset.mirrorDone) return;
+    inp.dataset.mirrorDone = '1';
+
+    const span = document.createElement('span');
+    span.className = 'print-mirror';
+    span.textContent = inp.value || '';
+    inp.parentNode.insertBefore(span, inp.nextSibling);
+
+    // Keep mirror updated as user types
+    inp.addEventListener('input', () => { span.textContent = inp.value || ''; });
+    inp.addEventListener('change', () => { span.textContent = inp.value || ''; });
+  });
+
+  // Selects
+  document.querySelectorAll('select').forEach(sel => {
+    if (sel.dataset.mirrorDone) return;
+    sel.dataset.mirrorDone = '1';
+
+    const span = document.createElement('span');
+    span.className = 'select-mirror';
+    const updateSpan = () => {
+      const opt = sel.options[sel.selectedIndex];
+      span.textContent = opt && opt.value ? opt.text : '';
+    };
+    updateSpan();
+    sel.parentNode.insertBefore(span, sel.nextSibling);
+    sel.addEventListener('change', updateSpan);
+  });
 }
 
-function convertLtextToTextarea() {
-  document.querySelectorAll('table.data input[type="text"].ltext').forEach(inp => {
-    const key = inp.dataset.key || inp.name;
-    const ta = document.createElement('textarea');
-    ta.className = 'ltext';
-    ta.placeholder = inp.placeholder || '';
-    if (inp.dataset.key) ta.dataset.key = inp.dataset.key;
-    if (inp.name) ta.name = inp.name;
-    ta.rows = 1;
-    // Restore value from localStorage if available, else from input
-    const stored = key ? ld(key, null) : null;
-    ta.value = (stored !== null ? stored : inp.value) || '';
-    inp.parentNode.replaceChild(ta, inp);
-    autoResize(ta);
-    // Bind save + undo + resize
-    ta.addEventListener('input', () => {
-      autoResize(ta);
-      if (key) {
-        pushUndo(key, ld(key, ''));
-        sv(key, ta.value);
-        showSavedGlobal();
+// Re-run after dynamic content is built (called after all init functions)
+function refreshPrintMirrors() {
+  // Reset mirrors that may have been rebuilt by dynamic pages
+  document.querySelectorAll('[data-mirror-done]').forEach(el => {
+    delete el.dataset.mirrorDone;
+  });
+  document.querySelectorAll('.print-mirror, .select-mirror').forEach(el => el.remove());
+  injectPrintMirrors();
+}
+
+// ── ADD / DELETE ROWS ────────────────────────────────────────────────────────
+// Tables that should NOT get add/delete (fixed-structure tables)
+const NO_ADD_DELETE = new Set([
+  'votersTbody','prePollBody','pollEveBody','evmBody','evmDepBody',
+  'chgMockBody','chgActualBody','mockBody','actualBody','endPollBody',
+  'vtDesktopBody1','vtDesktopBody2','vtMobileBody','vtSummaryBody'
+]);
+
+function makeDeleteBtn(row) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = '✕';
+  btn.title = 'Delete row';
+  btn.style.cssText = 'background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;flex-shrink:0;';
+  btn.onclick = () => {
+    if (!confirm('Delete this row?')) return;
+    // Clear stored values for this row
+    row.querySelectorAll('[data-key]').forEach(el => sv(el.dataset.key, ''));
+    row.remove();
+    refreshPrintMirrors();
+  };
+  return btn;
+}
+
+function addDeleteBtnToRow(row) {
+  // Add a thin last cell with delete button
+  const existing = row.querySelector('.row-del-td');
+  if (existing) return;
+  const td = document.createElement('td');
+  td.className = 'row-del-td';
+  td.style.cssText = 'width:30px;text-align:center;padding:3px;border:1px solid var(--border);';
+  td.appendChild(makeDeleteBtn(row));
+  row.appendChild(td);
+}
+
+function buildAddRowBtn(tbody, pgIdx) {
+  const wrap = document.createElement('div');
+  wrap.className = 'add-row-wrap no-print';
+  wrap.style.cssText = 'margin-top:4px;';
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = '+ Add Row';
+  btn.style.cssText = 'background:var(--paper);border:1px dashed var(--border);color:var(--ink-light);border-radius:4px;padding:5px 14px;cursor:pointer;font-size:.8rem;font-weight:600;font-family:Arial,sans-serif;';
+  btn.onclick = () => {
+    // Clone the last data row (not a separator/header row)
+    const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('amf-sep') && r.cells.length > 0);
+    if (rows.length === 0) return;
+    const template = rows[rows.length - 1];
+    const newRow = template.cloneNode(true);
+    const ts = Date.now();
+    // Clear values and assign new keys
+    newRow.querySelectorAll('input,select,textarea').forEach((el, i) => {
+      const oldKey = el.dataset.key || el.name || '';
+      const newKey = oldKey ? oldKey + '_extra_' + ts + '_' + i : 'extra_' + tbody.id + '_' + ts + '_' + i;
+      el.dataset.key = newKey;
+      if (el.name) el.name = newKey;
+      if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+      else el.value = '';
+      // Re-bind save
+      const handler = () => { sv(newKey, el.type==='checkbox'||el.type==='radio'?el.checked:el.value); showSaved(pgIdx); };
+      el.addEventListener('change', handler);
+      el.addEventListener('input', handler);
+    });
+    // Clear print mirrors from clone
+    newRow.querySelectorAll('.print-mirror,.select-mirror,.row-del-td').forEach(el => el.remove());
+    // Add delete button
+    addDeleteBtnToRow(newRow);
+    tbody.appendChild(newRow);
+    // Re-inject print mirrors for the new row
+    refreshPrintMirrors();
+  };
+  wrap.appendChild(btn);
+  return wrap;
+}
+
+function initAddDeleteRows() {
+  document.querySelectorAll('table.data tbody').forEach(tbody => {
+    if (!tbody.id || NO_ADD_DELETE.has(tbody.id)) return;
+    // Add delete button to existing rows
+    tbody.querySelectorAll('tr').forEach(row => {
+      if (!row.classList.contains('amf-sep') && row.cells.length > 0) {
+        addDeleteBtnToRow(row);
       }
     });
+    // Find the page index from closest .page ancestor
+    const page = tbody.closest('[data-page]');
+    const pgIdx = page ? parseInt(page.dataset.page) : 0;
+    // Add the "+ Add Row" button after the table's parent card
+    const table = tbody.closest('table');
+    const card = table ? table.closest('.card') : null;
+    if (card) {
+      // Add delete col header if thead exists
+      const thead = table.querySelector('thead tr:last-child');
+      if (thead && !thead.querySelector('.del-th')) {
+        const th = document.createElement('th');
+        th.className = 'del-th no-print';
+        th.style.cssText = 'width:30px;';
+        thead.appendChild(th);
+      }
+      card.appendChild(buildAddRowBtn(tbody, pgIdx));
+    }
   });
 }
 
@@ -1842,9 +1885,11 @@ initMockPage('endPollHead', 'endPollBody', 'endPollCards', END_POLL_ROWS,    9);
 initPage9();
 initVTSummary();
 initPage11();
-initPage12();
-convertLtextToTextarea();
 initRemarks();
+initAddDeleteRows();
+refreshPrintMirrors();
+// Re-sync mirrors just before printing to catch any last changes
+window.addEventListener('beforeprint', refreshPrintMirrors);
 </script>
 
 <!-- ══ PWA: INSTALL PROMPT BANNER ══ -->

@@ -277,8 +277,8 @@
     }
     .main { max-width: 100%; padding: 0; margin: 0; }
 
-    /* Continuous print — no forced page breaks, no breaks inside sections */
-    .page { display: block !important; break-after: auto; break-inside: avoid; }
+    /* Continuous print — natural page breaks allowed everywhere */
+    .page { display: block !important; break-after: auto; }
     .page-title {
       border-left: 4pt solid #000; padding: 3pt 0 3pt 8pt;
       margin-top: 14pt; margin-bottom: 8pt;
@@ -288,14 +288,14 @@
     .page-title h2 { font-size: 14pt; font-weight: 800; }
     .page-title .sub { font-size: 9pt; font-weight: 600; color: #444; margin-top: 1pt; }
 
-    /* Cards */
-    .card { box-shadow: none !important; border: 1pt solid #aaa; padding: 5pt 6pt; margin-bottom: 5pt; border-radius: 0; break-inside: avoid; }
+    /* Cards — allow breaks inside */
+    .card { box-shadow: none !important; border: 1pt solid #aaa; padding: 5pt 6pt; margin-bottom: 5pt; border-radius: 0; }
     .card-title { font-size: 11pt; font-weight: 800; padding-bottom: 2pt; margin-bottom: 4pt; border-bottom: 1pt solid #888; }
 
-    /* Tables — no breaks inside, auto layout, borders */
-    table { page-break-inside: avoid; break-inside: avoid; border-collapse: collapse; width: 100%; table-layout: auto; }
-    tr { page-break-inside: avoid; break-inside: avoid; }
-    th, td { page-break-inside: avoid; break-inside: avoid; }
+    /* Tables — allow breaks freely, rows break naturally */
+    table { border-collapse: collapse; width: 100%; table-layout: auto; }
+    tr { break-inside: auto; }
+    th, td { break-inside: auto; }
 
     table.data { font-size: 11pt; font-weight: 600; border: 1.5pt solid #000; }
     table.data thead th {
@@ -316,11 +316,13 @@
     /* ALL inputs/selects hidden in print — replaced by .print-mirror / .select-mirror spans */
     input, select { display: none !important; }
     textarea {
-      display: block; border: none !important; background: transparent !important;
+      display: block !important;
+      border: none !important; background: transparent !important;
       padding: 0 !important; font-size: 11pt; font-weight: 600;
       font-family: Arial, sans-serif; width: 100%; resize: none;
-      overflow: visible; height: auto; white-space: pre-wrap;
-      word-break: break-word;
+      overflow: visible !important; height: auto !important;
+      white-space: pre-wrap !important; word-break: break-word !important;
+      overflow-wrap: break-word !important; min-height: 0 !important;
     }
 
     /* Print mirrors — shown in print, hidden on screen */
@@ -345,13 +347,13 @@
     .rg label { font-size: 10pt; font-weight: 700; color: #000 !important; }
 
     /* AMF */
-    .amf-visit { border: 1pt solid #999; margin-bottom: 6pt; break-inside: avoid; }
+    .amf-visit { border: 1pt solid #999; margin-bottom: 6pt; }
     .amf-visit.collapsed .amf-visit-body { display: block !important; }
     .amf-visit-header { background: #1a1a2e !important; color: #fff !important; padding: 4pt 8pt; }
     .amf-visit-title { font-size: 11pt; font-weight: 700; }
     .amf-visit-body { padding: 5pt 5pt 3pt; }
     .amf-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4pt; margin-bottom: 5pt; }
-    .amf-pair .card { margin-bottom: 0; break-inside: avoid; }
+    .amf-pair .card { margin-bottom: 0; }
 
     /* EVM */
     .subsec-title { background: #333 !important; color: #fff !important; font-size: 10pt; font-weight: 700; padding: 3pt 6pt; margin: 5pt 0 3pt; }
@@ -392,8 +394,60 @@
 <div class="main">
 <form id="mainForm" autocomplete="off">
 
-<!-- ══ PAGE 1: DOCUMENTS ══ -->
+<!-- ══ PAGE 1: SECTOR INFORMATION ══ -->
 <div class="page active" data-page="0">
+  <div class="page-title"><h2>Sector Information</h2><div class="sub">BASIC SECTOR DETAILS</div></div>
+  <div class="card">
+    <table class="data" id="sectorInfoTable">
+      <thead><tr><th class="left" style="width:220px">Item</th><th class="left">Details</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:700;">Number &amp; Name of AC</td>
+          <td><textarea class="ltext-long" data-key="sector_ac" rows="1" placeholder="e.g. 42 — Dum Dum" style="width:100%;border:none;background:transparent;font-family:Arial,sans-serif;font-size:.88rem;font-weight:600;resize:none;overflow:hidden;min-height:1.8em;height:auto;line-height:1.4;display:block;word-break:break-word;box-sizing:border-box;"></textarea></td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">Number &amp; Name of LS</td>
+          <td><textarea class="ltext-long" data-key="sector_ls" rows="1" placeholder="e.g. 12 — Dum Dum Lok Sabha" style="width:100%;border:none;background:transparent;font-family:Arial,sans-serif;font-size:.88rem;font-weight:600;resize:none;overflow:hidden;min-height:1.8em;height:auto;line-height:1.4;display:block;word-break:break-word;box-sizing:border-box;"></textarea></td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">Sector Number</td>
+          <td><textarea class="ltext-long" data-key="sector_number" rows="1" placeholder="Sector No." style="width:100%;border:none;background:transparent;font-family:Arial,sans-serif;font-size:.88rem;font-weight:600;resize:none;overflow:hidden;min-height:1.8em;height:auto;line-height:1.4;display:block;word-break:break-word;box-sizing:border-box;"></textarea></td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;">Sector Office</td>
+          <td><textarea class="ltext-long" data-key="sector_office" rows="1" placeholder="Name / address of sector office" style="width:100%;border:none;background:transparent;font-family:Arial,sans-serif;font-size:.88rem;font-weight:600;resize:none;overflow:hidden;min-height:1.8em;height:auto;line-height:1.4;display:block;word-break:break-word;box-sizing:border-box;"></textarea></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title">Polling Stations in this Sector</div>
+    <table class="data" id="sectorPSTable">
+      <thead><tr><th style="width:60px">Sl. No.</th><th style="width:120px">No. of PS</th><th class="left">Name of PS</th></tr></thead>
+      <tbody id="sectorPSBody"></tbody>
+    </table>
+    <div class="add-row-wrap no-print" style="margin-top:4px;">
+      <button type="button" onclick="addSectorPSRow()" style="background:var(--paper);border:1px dashed var(--border);color:var(--ink-light);border-radius:4px;padding:5px 14px;cursor:pointer;font-size:.8rem;font-weight:600;font-family:Arial,sans-serif;">+ Add Row</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_0" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(0)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save0">✓ Saved</span><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 2: DOCUMENTS ══ -->
+<div class="page" data-page="1">
   <div class="page-title"><h2>Documents Checklist</h2><div class="sub">TO BE COLLECTED FROM RO / DEO</div></div>
   <div class="banner"><div class="stat"><div class="lbl">Collected</div><div class="val" id="checkCount">0</div></div><div class="stat"><div class="lbl">Remaining</div><div class="val hi" id="checkRemain">13</div></div></div>
   <div class="card">
@@ -415,7 +469,7 @@
   </div>
   <div class="card" style="margin-top:8px;">
     <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
-    <textarea data-key="remarks_page_0" rows="3" placeholder="Add remarks for this section…"
+    <textarea data-key="remarks_page_1" rows="3" placeholder="Add remarks for this section…"
       style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
              font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
              padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
@@ -424,13 +478,13 @@
     ></textarea>
   </div>
   <div class="buttons">
-    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(0)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save0">✓ Saved</span><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(1)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save1">✓ Saved</span><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
   </div>
 </div>
 
 <!-- ══ PAGE 2: VOTERS ══ -->
-<div class="page" data-page="1">
+<div class="page" data-page="2">
   <div class="page-title"><h2>Number of Voters</h2><div class="sub">POLLING STATION WISE BREAKDOWN</div></div>
   <div class="banner">
     <div class="stat"><div class="lbl">Total</div><div class="val" id="grandTotal">—</div></div>
@@ -447,7 +501,7 @@
   </div>
     <div class="card" style="margin-top:8px;">
     <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
-    <textarea data-key="remarks_page_1" rows="3" placeholder="Add remarks for this section…"
+    <textarea data-key="remarks_page_2" rows="3" placeholder="Add remarks for this section…"
       style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
              font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
              padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
@@ -456,13 +510,13 @@
     ></textarea>
   </div>
   <div class="buttons">
-    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(1)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save1">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(2)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save2">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
   </div>
 </div>
 
 <!-- ══ PAGE 3: AMF ══ -->
-<div class="page" data-page="2">
+<div class="page" data-page="3">
   <div class="page-title"><h2>Assured Minimum Facilities</h2><div class="sub">AMF STATUS — POLLING STATION WISE</div></div>
 
   <!-- Add new visit bar -->
@@ -479,7 +533,7 @@
 
     <div class="card" style="margin-top:8px;">
     <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
-    <textarea data-key="remarks_page_2" rows="3" placeholder="Add remarks for this section…"
+    <textarea data-key="remarks_page_3" rows="3" placeholder="Add remarks for this section…"
       style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
              font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
              padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
@@ -489,12 +543,12 @@
   </div>
   <div class="buttons">
     <div class="btn-group"></div>
-    <div class="btn-group"><span class="save-ind" id="save2">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save3">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
   </div>
 </div>
 
 <!-- ══ PAGE 4: CONTACTS ══ -->
-<div class="page" data-page="3">
+<div class="page" data-page="4">
   <div class="page-title"><h2>Important Contacts</h2><div class="sub">KEY PERSONNEL &amp; INFRASTRUCTURE</div></div>
   <div class="card">
     <div class="card-title">General</div>
@@ -521,31 +575,6 @@
   </div>
     <div class="card" style="margin-top:8px;">
     <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
-    <textarea data-key="remarks_page_3" rows="3" placeholder="Add remarks for this section…"
-      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
-             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
-             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
-      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
-      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
-    ></textarea>
-  </div>
-  <div class="buttons">
-    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(3)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save3">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
-  </div>
-</div>
-
-<!-- ══ PAGE 5: PRE-POLL ══ -->
-<div class="page" data-page="4">
-  <div class="page-title"><h2>Pre-Poll Responsibilities</h2><div class="sub">CHECKLIST — VERIFY BEFORE POLLING DAY</div></div>
-  <div class="card">
-    <table class="data">
-      <thead><tr><th style="width:44px">Sl.</th><th style="width:36px">✓</th><th class="left">Item</th><th style="width:110px">Status</th><th style="width:180px">Remarks</th></tr></thead>
-      <tbody id="prePollBody"></tbody>
-    </table>
-  </div>
-    <div class="card" style="margin-top:8px;">
-    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
     <textarea data-key="remarks_page_4" rows="3" placeholder="Add remarks for this section…"
       style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
              font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
@@ -560,13 +589,13 @@
   </div>
 </div>
 
-<!-- ══ PAGE 6: POLL-EVE ══ -->
+<!-- ══ PAGE 5: PRE-POLL ══ -->
 <div class="page" data-page="5">
-  <div class="page-title"><h2>Poll-Eve Responsibilities</h2><div class="sub">CHECKLIST — VERIFY ON THE EVE OF POLLING</div></div>
+  <div class="page-title"><h2>Pre-Poll Responsibilities</h2><div class="sub">CHECKLIST — VERIFY BEFORE POLLING DAY</div></div>
   <div class="card">
     <table class="data">
       <thead><tr><th style="width:44px">Sl.</th><th style="width:36px">✓</th><th class="left">Item</th><th style="width:110px">Status</th><th style="width:180px">Remarks</th></tr></thead>
-      <tbody id="pollEveBody"></tbody>
+      <tbody id="prePollBody"></tbody>
     </table>
   </div>
     <div class="card" style="margin-top:8px;">
@@ -585,8 +614,33 @@
   </div>
 </div>
 
-<!-- ══ PAGE 7: EVM / VVPAT ══ -->
+<!-- ══ PAGE 6: POLL-EVE ══ -->
 <div class="page" data-page="6">
+  <div class="page-title"><h2>Poll-Eve Responsibilities</h2><div class="sub">CHECKLIST — VERIFY ON THE EVE OF POLLING</div></div>
+  <div class="card">
+    <table class="data">
+      <thead><tr><th style="width:44px">Sl.</th><th style="width:36px">✓</th><th class="left">Item</th><th style="width:110px">Status</th><th style="width:180px">Remarks</th></tr></thead>
+      <tbody id="pollEveBody"></tbody>
+    </table>
+  </div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_6" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(6)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save6">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 7: EVM / VVPAT ══ -->
+<div class="page" data-page="7">
   <div class="page-title"><h2>Reserve EVM / VVPAT</h2></div>
   <div class="card">
     <div class="card-title">Reserve EVM / VVPAT Received</div>
@@ -638,32 +692,6 @@
   </div>
     <div class="card" style="margin-top:8px;">
     <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
-    <textarea data-key="remarks_page_6" rows="3" placeholder="Add remarks for this section…"
-      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
-             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
-             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
-      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
-      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
-    ></textarea>
-  </div>
-  <div class="buttons">
-    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(6)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save6">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
-  </div>
-</div>
-
-<!-- ══ PAGE 8: MOCK POLL ══ -->
-<div class="page" data-page="7">
-  <div class="page-title"><h2>Mock Poll Responsibilities</h2><div class="sub">PS-WISE STATUS AT TIME OF MOCK POLL</div></div>
-  <div class="card mock-table-wrap" style="overflow-x:auto;padding:12px 8px;">
-    <table class="mock-table" id="mockDesktop">
-      <thead><tr id="mockHead"><th class="left" style="min-width:160px">Item</th></tr></thead>
-      <tbody id="mockBody"></tbody>
-    </table>
-  </div>
-  <div class="mock-cards" id="mockCards"></div>
-    <div class="card" style="margin-top:8px;">
-    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
     <textarea data-key="remarks_page_7" rows="3" placeholder="Add remarks for this section…"
       style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
              font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
@@ -678,16 +706,16 @@
   </div>
 </div>
 
-<!-- ══ PAGE 9: ACTUAL POLL ══ -->
+<!-- ══ PAGE 8: MOCK POLL ══ -->
 <div class="page" data-page="8">
-  <div class="page-title"><h2>Responsibilities during Actual Poll</h2><div class="sub">PS-WISE STATUS DURING ACTUAL POLLING</div></div>
+  <div class="page-title"><h2>Mock Poll Responsibilities</h2><div class="sub">PS-WISE STATUS AT TIME OF MOCK POLL</div></div>
   <div class="card mock-table-wrap" style="overflow-x:auto;padding:12px 8px;">
-    <table class="mock-table" id="actualDesktop">
-      <thead><tr id="actualHead"><th class="left" style="min-width:200px">Item</th></tr></thead>
-      <tbody id="actualBody"></tbody>
+    <table class="mock-table" id="mockDesktop">
+      <thead><tr id="mockHead"><th class="left" style="min-width:160px">Item</th></tr></thead>
+      <tbody id="mockBody"></tbody>
     </table>
   </div>
-  <div class="mock-cards" id="actualCards"></div>
+  <div class="mock-cards" id="mockCards"></div>
     <div class="card" style="margin-top:8px;">
     <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
     <textarea data-key="remarks_page_8" rows="3" placeholder="Add remarks for this section…"
@@ -704,16 +732,16 @@
   </div>
 </div>
 
-<!-- ══ PAGE 10: END OF POLL ══ -->
+<!-- ══ PAGE 9: ACTUAL POLL ══ -->
 <div class="page" data-page="9">
-  <div class="page-title"><h2>End of Poll Responsibilities</h2><div class="sub">PS-WISE STATUS AT END OF POLL</div></div>
+  <div class="page-title"><h2>Responsibilities during Actual Poll</h2><div class="sub">PS-WISE STATUS DURING ACTUAL POLLING</div></div>
   <div class="card mock-table-wrap" style="overflow-x:auto;padding:12px 8px;">
-    <table class="mock-table" id="endPollDesktop">
-      <thead><tr id="endPollHead"><th class="left" style="min-width:200px">Item</th></tr></thead>
-      <tbody id="endPollBody"></tbody>
+    <table class="mock-table" id="actualDesktop">
+      <thead><tr id="actualHead"><th class="left" style="min-width:200px">Item</th></tr></thead>
+      <tbody id="actualBody"></tbody>
     </table>
   </div>
-  <div class="mock-cards" id="endPollCards"></div>
+  <div class="mock-cards" id="actualCards"></div>
     <div class="card" style="margin-top:8px;">
     <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
     <textarea data-key="remarks_page_9" rows="3" placeholder="Add remarks for this section…"
@@ -730,8 +758,34 @@
   </div>
 </div>
 
-<!-- ══ PAGE 11: VOTER TURNOUT ══ -->
+<!-- ══ PAGE 10: END OF POLL ══ -->
 <div class="page" data-page="10">
+  <div class="page-title"><h2>End of Poll Responsibilities</h2><div class="sub">PS-WISE STATUS AT END OF POLL</div></div>
+  <div class="card mock-table-wrap" style="overflow-x:auto;padding:12px 8px;">
+    <table class="mock-table" id="endPollDesktop">
+      <thead><tr id="endPollHead"><th class="left" style="min-width:200px">Item</th></tr></thead>
+      <tbody id="endPollBody"></tbody>
+    </table>
+  </div>
+  <div class="mock-cards" id="endPollCards"></div>
+    <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
+    <textarea data-key="remarks_page_20" rows="3" placeholder="Add remarks for this section…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>
+  </div>
+  <div class="buttons">
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(10)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save10">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+  </div>
+</div>
+
+<!-- ══ PAGE 11: VOTER TURNOUT ══ -->
+<div class="page" data-page="11">
   <div class="page-title"><h2>Voter Turnout</h2><div class="sub">POLLING STATION WISE — M / F / 3RD / TOTAL</div></div>
 
   <!-- Desktop Table 1: PS 217–233 -->
@@ -790,7 +844,7 @@
 
     <div class="card" style="margin-top:8px;">
     <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
-    <textarea data-key="remarks_page_10" rows="3" placeholder="Add remarks for this section…"
+    <textarea data-key="remarks_page_21" rows="3" placeholder="Add remarks for this section…"
       style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
              font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
              padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
@@ -800,12 +854,12 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetVT()">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save10">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save11">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
   </div>
 </div>
 
 <!-- ══ PAGE 11: REPORTS TO BE FURNISHED ══ -->
-<div class="page" data-page="11">
+<div class="page" data-page="12">
   <div class="page-title"><h2>Reports to be Furnished</h2><div class="sub">CHECKLIST — REPORTS &amp; SUBMISSIONS</div></div>
   <div class="banner"><div class="stat"><div class="lbl">Collected</div><div class="val" id="rptCount">0</div></div><div class="stat"><div class="lbl">Remaining</div><div class="val hi" id="rptRemain">10</div></div></div>
   <div class="card">
@@ -824,7 +878,7 @@
   </div>
     <div class="card" style="margin-top:8px;">
     <div class="card-title" style="font-size:1rem;font-weight:700;">Remarks</div>
-    <textarea data-key="remarks_page_11" rows="3" placeholder="Add remarks for this section…"
+    <textarea data-key="remarks_page_22" rows="3" placeholder="Add remarks for this section…"
       style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
              font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
              padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;"
@@ -833,8 +887,8 @@
     ></textarea>
   </div>
   <div class="buttons">
-    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(11)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save11">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-print" onclick="window.print()">🖨 Print / Save PDF</button></div>
+    <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(12)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
+    <div class="btn-group"><span class="save-ind" id="save12">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-print" onclick="window.print()">🖨 Print / Save PDF</button></div>
   </div>
 </div>
 
@@ -843,19 +897,48 @@
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
-const SUBS    = ["217","218","219","233","234","235","238","239"];
-const PS_NAMES = {
-  "217": "217 - NIMTA JIBANTOSH GHOSH MEMORIAL GIRLS HIGH SCHOOL, R-1",
-  "218": "218 - NIMTA JIBANTOSH GHOSH MEMORIAL GIRLS HIGH SCHOOL, R-2",
-  "219": "219 - NIMTA JIBANTOSH GHOSH MEMORIAL GIRLS HIGH SCHOOL, R-3",
-  "233": "233 - NIMTA HIGH SCHOOL, R-1",
-  "234": "234 - NIMTA HIGH SCHOOL, R-2",
-  "235": "235 - NIMTA HIGH SCHOOL, R-3",
-  "238": "238 - NIMTA HIGH SCHOOL, R-4",
-  "239": "239 - NIMTA HIGH SCHOOL, R-5",
-};
+// ── DYNAMIC PS LIST (from Sector Information page) ───────────────────────────
+// Legacy fallback removed — PS list is always read from sector page localStorage
+function getSUBS() {
+  const list = [];
+  let i = 1;
+  while (true) {
+    const no = ld(`sector_ps_no_${i}`, null);
+    if (no === null && ld(`sector_ps_sl_${i}`, null) === null) break;
+    if (no && no.trim()) list.push(no.trim());
+    i++;
+    if (i > 100) break; // safety
+  }
+  return list;
+}
+
+function getPSName(psNo) {
+  let i = 1;
+  while (true) {
+    const no = ld(`sector_ps_no_${i}`, null);
+    if (no === null && ld(`sector_ps_sl_${i}`, null) === null) break;
+    if (no && no.trim() === psNo) {
+      const name = ld(`sector_ps_name_${i}`, '');
+      return name ? `${psNo} - ${name}` : psNo;
+    }
+    i++;
+    if (i > 100) break;
+  }
+  return psNo;
+}
+
+// Keep SUBS/PS_NAMES as getters for backward compat — evaluated fresh each call
+let SUBS = [];
+let PS_NAMES = {};
+
+function refreshSUBS() {
+  SUBS = getSUBS();
+  PS_NAMES = {};
+  SUBS.forEach(ps => { PS_NAMES[ps] = getPSName(ps); });
+}
+
 const VENUES  = ["Nimta Jibantosh","Nimta High"];
-const PAGE_LABELS = ["Documents","Voters","AMF","Contacts","Pre-Poll","Poll-Eve","EVM/VVPAT","Mock Poll","Actual Poll","End of Poll","Turnout","Reports"];
+const PAGE_LABELS = ["Sector","Documents","Voters","AMF","Contacts","Pre-Poll","Poll-Eve","EVM/VVPAT","Mock Poll","Actual Poll","End of Poll","Turnout","Reports"];
 const AMF_ITEMS = ["Block/Municipality","Lat/Long","Building Type","Physical Condition of PS Satisfactory","Temporary Structure Required","Ramp with Handrail","Condition of Approach Road","Drinking Water","Shed","Male Toilet","Female Toilet","Power Connection","Plug Points","Lighting","Furniture","Voter Assistance Booth","Signage","PS on Ground Floor","Number and Condition of Door & Door-lock","Number and Condition of Window, Grill & Window-lock"];
 const AMF_FURNITURE_SUBS = [
   { label: "No. of table",           key: "furn_table" },
@@ -927,6 +1010,14 @@ function showSaved(p) {
   window._gst = setTimeout(() => document.getElementById('saveGlobal').classList.remove('on'), 1800);
 }
 
+function showSavedGlobal() {
+  const el = document.getElementById('saveGlobal');
+  if (!el) return;
+  el.classList.add('on');
+  clearTimeout(window._gst);
+  window._gst = setTimeout(() => el.classList.remove('on'), 1800);
+}
+
 function bindField(el, pgIdx, cb) {
   const key = el.dataset.key || el.name;
   if (!key) return;
@@ -988,12 +1079,122 @@ function resetPage(p) {
     else el.value = '';
     if (key) sv(key, '');
   });
-  if (p===0) updateCheckProgress();
-  if (p===1) updateVoterTotals();
-  // AMF page (p===2) uses per-visit delete buttons instead
+  if (p===1) updateCheckProgress();
+  if (p===2) updateVoterTotals();
+  // AMF page (p===3) uses per-visit delete buttons instead
+  if (p===0) {
+    const tbody = document.getElementById('sectorPSBody');
+    if (tbody) {
+      tbody.innerHTML = '';
+      sectorPSRowCount = 0;
+      tbody.appendChild(makeSectorPSRow(1));
+    }
+    refreshPrintMirrors();
+  }
 }
 
-// ── PAGE 1: DOCUMENTS ─────────────────────────────────────────────────────────
+// ── PAGE 1: SECTOR INFORMATION ────────────────────────────────────────────────
+let sectorPSRowCount = 0;
+
+function makeSectorPSRow(slNum) {
+  sectorPSRowCount++;
+  const idx = sectorPSRowCount;
+  const slKey   = `sector_ps_sl_${idx}`;
+  const noKey   = `sector_ps_no_${idx}`;
+  const nameKey = `sector_ps_name_${idx}`;
+
+  const tr = document.createElement('tr');
+  tr.dataset.sectorRow = idx;
+
+  const tdSl   = document.createElement('td');
+  const tdNo   = document.createElement('td');
+  const tdName = document.createElement('td');
+  const tdDel  = document.createElement('td');
+  tdDel.className = 'row-del-td no-print';
+  tdDel.style.cssText = 'width:30px;text-align:center;padding:3px;border:1px solid var(--border);';
+
+  const inpSl = document.createElement('input');
+  inpSl.type = 'number'; inpSl.min = '1'; inpSl.placeholder = slNum;
+  inpSl.dataset.key = slKey;
+  const storedSl = ld(slKey, '');
+  inpSl.value = storedSl || slNum;
+  bindField(inpSl, 0);
+  tdSl.appendChild(inpSl);
+
+  const inpNo = document.createElement('input');
+  inpNo.type = 'text'; inpNo.className = 'ltext'; inpNo.placeholder = 'PS No.';
+  inpNo.dataset.key = noKey;
+  const storedNo = ld(noKey, '');
+  if (storedNo) inpNo.value = storedNo;
+  bindField(inpNo, 0);
+  inpNo.addEventListener('change', () => refreshSUBS());
+  tdNo.appendChild(inpNo);
+
+  const ta = document.createElement('textarea');
+  ta.className = 'ltext-long';
+  ta.dataset.key = nameKey;
+  ta.placeholder = 'Name of PS…';
+  ta.rows = 1;
+  ta.style.cssText = 'width:100%;border:none;background:transparent;font-family:Arial,sans-serif;font-size:.88rem;font-weight:600;resize:none;overflow:hidden;min-height:1.8em;height:auto;line-height:1.4;display:block;word-break:break-word;box-sizing:border-box;';
+  const storedName = ld(nameKey, '');
+  if (storedName) ta.value = storedName;
+  const resize = () => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; };
+  ta.addEventListener('input', () => { resize(); pushUndo(nameKey, ld(nameKey,'')); sv(nameKey, ta.value); showSaved(0); refreshSUBS(); });
+  setTimeout(resize, 0);
+  tdName.appendChild(ta);
+
+  const delBtn = document.createElement('button');
+  delBtn.type = 'button'; delBtn.textContent = '✕'; delBtn.title = 'Delete row';
+  delBtn.style.cssText = 'background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;';
+  delBtn.onclick = () => {
+    if (!confirm('Delete this row?')) return;
+    sv(slKey,''); sv(noKey,''); sv(nameKey,'');
+    tr.remove();
+    refreshPrintMirrors();
+  };
+  tdDel.appendChild(delBtn);
+
+  tr.appendChild(tdSl); tr.appendChild(tdNo); tr.appendChild(tdName); tr.appendChild(tdDel);
+  return tr;
+}
+
+function addSectorPSRow() {
+  const tbody = document.getElementById('sectorPSBody');
+  const rowNum = tbody.querySelectorAll('tr').length + 1;
+  const row = makeSectorPSRow(rowNum);
+  tbody.appendChild(row);
+  refreshPrintMirrors();
+  // No reinit here — user must save/reload to see PS in other pages
+  // But we do refresh SUBS so subsequent tables pick it up on next init
+  refreshSUBS();
+}
+
+function initSectorPage() {
+  // Bind the 4 info textareas
+  ['sector_ac','sector_ls','sector_number','sector_office'].forEach(key => {
+    const ta = document.querySelector(`[data-key="${key}"]`);
+    if (!ta) return;
+    const stored = ld(key, '');
+    if (stored) ta.value = stored;
+    const resize = () => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; };
+    ta.addEventListener('input', () => { resize(); pushUndo(key, ld(key,'')); sv(key, ta.value); showSaved(0); });
+    setTimeout(resize, 0);
+  });
+
+  // Restore PS rows from localStorage
+  const tbody = document.getElementById('sectorPSBody');
+  let i = 1;
+  while (ld(`sector_ps_sl_${i}`, null) !== null || ld(`sector_ps_no_${i}`, null) !== null || ld(`sector_ps_name_${i}`, null) !== null) {
+    tbody.appendChild(makeSectorPSRow(i));
+    i++;
+  }
+  // Always show at least 1 row
+  if (tbody.querySelectorAll('tr').length === 0) {
+    tbody.appendChild(makeSectorPSRow(1));
+  }
+}
+
+// ── PAGE 2: DOCUMENTS ─────────────────────────────────────────────────────────
 function updateCheckProgress() {
   const cbs = document.querySelectorAll('#docChecklist input[type=checkbox]');
   let n = 0;
@@ -1005,13 +1206,23 @@ function initPage1() {
   document.querySelectorAll('#docChecklist li').forEach(li => {
     const idx=li.dataset.idx, cb=li.querySelector('input');
     cb.dataset.key='doc_'+idx; cb.name='doc_'+idx;
-    bindField(cb, 0, updateCheckProgress);
+    bindField(cb, 1, updateCheckProgress);
     li.addEventListener('click', e => { if(e.target!==cb){cb.checked=!cb.checked; cb.dispatchEvent(new Event('change'));} });
   });
   updateCheckProgress();
 }
 
 // ── PAGE 2: VOTERS ────────────────────────────────────────────────────────────
+function noPSNotice(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td colspan="10" style="text-align:center;padding:16px;color:var(--accent);font-style:italic;font-size:.9rem;">
+    Please add Polling Stations in the <strong>Sector Information</strong> page first.
+  </td>`;
+  el.appendChild(tr);
+}
 function updateVoterTotals() {
   let gM=0,gF=0,gTG=0,gT=0;
   SUBS.forEach(s => {
@@ -1032,9 +1243,12 @@ function updateVoterTotals() {
   document.getElementById('ftMale').textContent=fmt(gM);
   document.getElementById('ftFemale').textContent=fmt(gF);
   document.getElementById('ftTG').textContent=fmt(gTG);
+  // Refresh VT summary enrolled column live
+  SUBS.forEach(ps => calcVTSummaryRow(ps));
 }
 function initPage2() {
   const tbody=document.getElementById('votersTbody');
+  if (SUBS.length === 0) { noPSNotice('votersTbody'); return; }
   SUBS.forEach(s => {
     const tr=document.createElement('tr');
     tr.innerHTML=`<td style="font-size:.78rem;line-height:1.3;text-align:left;padding:6px 8px;">${PS_NAMES[s]}</td>
@@ -1043,7 +1257,7 @@ function initPage2() {
       <td><input type="number" id="v_${s}_tg" data-key="v_${s}_tg" min="0" placeholder="0"></td>
       <td><input type="number" id="v_${s}_tot" class="total" placeholder="Auto" readonly tabindex="-1"></td>`;
     tbody.appendChild(tr);
-    ['m','f','tg'].forEach(t => bindField(document.getElementById(`v_${s}_${t}`), 1, updateVoterTotals));
+    ['m','f','tg'].forEach(t => bindField(document.getElementById(`v_${s}_${t}`), 2, updateVoterTotals));
   });
   updateVoterTotals();
 }
@@ -1090,7 +1304,7 @@ function buildAMFTable(ps, visitId) {
         resize();
         pushUndo(name, ld(name,''));
         sv(name, ta.value);
-        showSaved(2);
+        showSaved(3);
       });
       setTimeout(resize, 0);
 
@@ -1105,7 +1319,7 @@ function buildAMFTable(ps, visitId) {
       const storedBT = ld(name+'_val', null);
       tr.querySelectorAll(`input[name="${name}"]`).forEach(r => {
         if (storedBT && r.value === storedBT) r.checked = true;
-        r.addEventListener('change', () => { sv(name+'_val', r.value); showSaved(2); });
+        r.addEventListener('change', () => { sv(name+'_val', r.value); showSaved(3); });
       });
 
     } else if (item === 'Condition of Approach Road') {
@@ -1119,7 +1333,7 @@ function buildAMFTable(ps, visitId) {
       const stored = ld(name+'_val', null);
       tr.querySelectorAll(`input[name="${name}"]`).forEach(r => {
         if (stored && r.value === stored) r.checked = true;
-        r.addEventListener('change', () => { sv(name+'_val', r.value); showSaved(2); });
+        r.addEventListener('change', () => { sv(name+'_val', r.value); showSaved(3); });
       });
 
     } else {
@@ -1133,7 +1347,7 @@ function buildAMFTable(ps, visitId) {
       const stored = ld(name+'_val', null);
       tr.querySelectorAll(`input[name="${name}"]`).forEach(r => {
         if (stored && r.value === stored) r.checked = true;
-        r.addEventListener('change', () => { sv(name+'_val', r.value); showSaved(2); });
+        r.addEventListener('change', () => { sv(name+'_val', r.value); showSaved(3); });
       });
 
       // Furniture sub-items
@@ -1147,7 +1361,7 @@ function buildAMFTable(ps, visitId) {
             <td><input type="number" data-key="${subKey}" min="0" placeholder="—"
               style="border:none;background:transparent;font-family:Arial, sans-serif;font-size:.82rem;text-align:center;padding:3px 4px;width:100%;"></td>`;
           tbody.appendChild(subTr);
-          bindField(subTr.querySelector('input'), 2);
+          bindField(subTr.querySelector('input'), 3);
         });
       }
     }
@@ -1196,6 +1410,28 @@ function renderAMFVisit(visitId, date, collapsed) {
     }
     body.appendChild(pair);
   }
+
+  // Per-visit Remarks
+  const remKey = `amf_remarks_${visitId}`;
+  const remCard = document.createElement('div');
+  remCard.className = 'card';
+  remCard.style.cssText = 'margin-top:8px;padding:12px 16px;';
+  remCard.innerHTML = `
+    <div class="card-title" style="font-size:.95rem;font-weight:700;margin-bottom:8px;">Remarks for this Visit</div>
+    <textarea data-key="${remKey}" rows="3" placeholder="Add remarks for this visit…"
+      style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
+             font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
+             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;
+             white-space:pre-wrap;word-break:break-word;"
+      onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
+      onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
+    ></textarea>`;
+  body.appendChild(remCard);
+
+  const remTa = remCard.querySelector('textarea');
+  const storedRem = ld(remKey, null);
+  if (storedRem) remTa.value = storedRem;
+  remTa.addEventListener('input', () => { sv(remKey, remTa.value); showSaved(3); });
 }
 
 function getAMFVisits() {
@@ -1226,7 +1462,7 @@ function addAMFVisit() {
   document.querySelectorAll('.amf-visit').forEach(el => el.classList.add('collapsed'));
   renderAMFVisit(visitId, date, false);
   dateInput.value = '';
-  showSaved(2);
+  showSaved(3);
 }
 
 function toggleAMFVisit(visitId) {
@@ -1245,10 +1481,11 @@ function deleteAMFVisit(visitId) {
     });
   });
   sv(`amf_visit_date_${visitId}`, '');
+  sv(`amf_remarks_${visitId}`, '');
   // remove from DOM and re-render all to fix numbering
   document.getElementById('amfVisitsContainer').innerHTML = '';
   initPage3();
-  showSaved(2);
+  showSaved(3);
 }
 
 function initPage3() {
@@ -1264,7 +1501,7 @@ function initPage3() {
 
 // ── PAGE 4: CONTACTS ──────────────────────────────────────────────────────────
 function initPage4() {
-  document.querySelectorAll('[data-page="3"] input[data-key]').forEach(el => bindField(el,3));
+  document.querySelectorAll('[data-page="4"] input[data-key]').forEach(el => bindField(el, 4));
 
   // Venue table: Category (rowspan=2) | Nimta Jibantosh | Nimta High
   // Sub-rows: Name row, then Number row per category
@@ -1285,7 +1522,7 @@ function initPage4() {
         return `<td><div style="font-size:.62rem;font-family:Arial, sans-serif;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Name</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter name"></td>`;
       }).join('')}`;
     vb.appendChild(trN);
-    trN.querySelectorAll('input').forEach(el => bindField(el, 3));
+    trN.querySelectorAll('input').forEach(el => bindField(el, 4));
 
     // Number row — no category cell (covered by rowspan)
     const trNum = document.createElement('tr');
@@ -1294,7 +1531,7 @@ function initPage4() {
       return `<td style="border-top:1px dashed var(--border);"><div style="font-size:.62rem;font-family:Arial, sans-serif;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Number</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter number"></td>`;
     }).join('');
     vb.appendChild(trNum);
-    trNum.querySelectorAll('input').forEach(el => bindField(el, 3));
+    trNum.querySelectorAll('input').forEach(el => bindField(el, 4));
 
     // Separator
     const sep = document.createElement('tr');
@@ -1304,7 +1541,8 @@ function initPage4() {
 
   // Officers: PS | PrO Name | PrO Number | 1st PO Name | 1st PO Number
   const ob = document.getElementById('officersTbody');
-  SUBS.forEach(s => {
+  if (SUBS.length === 0) { noPSNotice('officersTbody'); }
+  else SUBS.forEach(s => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="mono">${s}</td>
@@ -1313,19 +1551,20 @@ function initPage4() {
       <td><input type="text" data-key="po1_name_${s}" class="ltext" placeholder="Name"></td>
       <td><input type="text" data-key="po1_num_${s}"  class="ltext" placeholder="Number"></td>`;
     ob.appendChild(tr);
-    tr.querySelectorAll('input').forEach(el => bindField(el,3));
+    tr.querySelectorAll('input').forEach(el => bindField(el, 4));
   });
 
   // BLO: PS | Name | Number
   const bb = document.getElementById('bloTbody');
-  SUBS.forEach(s => {
+  if (SUBS.length === 0) { noPSNotice('bloTbody'); }
+  else SUBS.forEach(s => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="mono">${s}</td>
       <td><input type="text" data-key="blo_name_${s}" class="ltext" placeholder="Name"></td>
       <td><input type="text" data-key="blo_num_${s}"  class="ltext" placeholder="Number"></td>`;
     bb.appendChild(tr);
-    tr.querySelectorAll('input').forEach(el => bindField(el,3));
+    tr.querySelectorAll('input').forEach(el => bindField(el, 4));
   });
 }
 
@@ -1364,7 +1603,7 @@ function buildChgTable(tbodyId, prefix, pgIdx) {
 }
 function initPage7() {
   ['evm_recv_datetime','chg_mock_datetime','chg_actual_datetime','evm_dep_datetime'].forEach(key=>{
-    const el=document.querySelector(`[data-key="${key}"]`); if(el) bindField(el,6);
+    const el=document.querySelector(`[data-key="${key}"]`); if(el) bindField(el, 7);
   });
   ['evmBody','evmDepBody'].forEach(id=>{
     const tbody=document.getElementById(id);
@@ -1375,7 +1614,7 @@ function initPage7() {
         <td><input type="text" data-key="${pfx}_bu_${i}" placeholder="BU-ID"></td>
         <td><input type="text" data-key="${pfx}_cu_${i}" placeholder="CU-ID"></td>
         <td><input type="text" data-key="${pfx}_vv_${i}" placeholder="VVPAT-ID"></td>`;
-      tbody.appendChild(tr); tr.querySelectorAll('input').forEach(el=>bindField(el,6));
+      tbody.appendChild(tr); tr.querySelectorAll('input').forEach(el=>bindField(el, 7));
     }
   });
   buildChgTable('chgMockBody','mock',6);
@@ -1385,9 +1624,15 @@ function initPage7() {
 // ── GENERIC MOCK-STYLE PAGE BUILDER ──────────────────────────────────────────
 function initMockPage(headId, tbodyId, cardsId, rows, pgIdx) {
   const headRow = document.getElementById(headId);
-  SUBS.forEach(s => { const th=document.createElement('th'); th.textContent=s; headRow.appendChild(th); });
   const tbody = document.getElementById(tbodyId);
   const cardsWrap = document.getElementById(cardsId);
+
+  if (SUBS.length === 0) {
+    noPSNotice(tbodyId);
+    return;
+  }
+
+  SUBS.forEach(s => { const th=document.createElement('th'); th.textContent=s; headRow.appendChild(th); });
   rows.forEach(row => {
     // desktop row
     const tr = document.createElement('tr');
@@ -1435,7 +1680,7 @@ function initPage8() {
       if(row.text){ el.type='number'; el.min='0'; el.placeholder='—'; }
       else { el.innerHTML='<option value="">—</option><option value="yes">Yes</option><option value="no">No</option><option value="na">N.A.</option>'; }
       el.dataset.key=key;
-      bindField(el,7);
+      bindField(el, 8);
       td.appendChild(el); tr.appendChild(td);
     });
     tbody.appendChild(tr);
@@ -1449,7 +1694,7 @@ function initPage8() {
     }).join('');
     card.innerHTML=`<div class="mock-card-title">${row.label}</div><div class="mock-card-grid">${cells}</div>`;
     cardsWrap.appendChild(card);
-    card.querySelectorAll('input,select').forEach(el=>bindField(el,7));
+    card.querySelectorAll('input,select').forEach(el=>bindField(el, 8));
   });
 }
 
@@ -1484,11 +1729,16 @@ function calcVTCols(ps){
 function calcVTSummaryRow(ps) {
   const castEl = document.getElementById(`vt_summary_cast_${ps}`);
   const pctEl  = document.getElementById(`vt_summary_pct_${ps}`);
-  const totalVotersEl = document.getElementById(`vt_summary_total_${ps}`);
-  if (!castEl || !pctEl || !totalVotersEl) return;
+  const totalEl = document.getElementById(`vt_summary_total_${ps}`);
+  if (!castEl || !pctEl) return;
 
   const cast = parseFloat(document.getElementById(vtKey(ps,'TOTAL','Tot'))?.value) || 0;
-  const enrolled = parseFloat(totalVotersEl.value) || 0;
+  // Always read enrolled fresh from Voters page total
+  const enrolled = parseFloat(ld(`v_${ps}_tot`, '') || document.getElementById(`v_${ps}_tot`)?.value || 0) || 0;
+
+  // Keep the display cell in sync
+  if (totalEl) totalEl.value = enrolled > 0 ? enrolled : '';
+
   castEl.value = cast > 0 ? cast : '';
   if (enrolled > 0 && cast > 0) {
     pctEl.value = ((cast / enrolled) * 100).toFixed(2) + '%';
@@ -1501,16 +1751,21 @@ function initVTSummary() {
   const tbody = document.getElementById('vtSummaryBody');
   if (!tbody) return;
   tbody.innerHTML = '';
+  if (SUBS.length === 0) { noPSNotice('vtSummaryBody'); return; }
   SUBS.forEach(ps => {
     const tr = document.createElement('tr');
-    const totalKey = `vt_enrolled_${ps}`;
-    const storedEnrolled = ld(totalKey, '');
+    // Get total voters from Page 3 (Voters page) — v_${ps}_tot field
+    const enrolledFromVoters = ld(`v_${ps}_tot`, '') || '';
+
     tr.innerHTML = `
       <td style="font-size:.82rem;font-weight:600;">${PS_NAMES[ps]}</td>
-      <td><input type="number" id="vt_summary_total_${ps}" data-key="${totalKey}"
-            min="0" placeholder="Enter total enrolled voters"
-            style="width:100%;border:none;background:transparent;font-family:Arial,sans-serif;
-                   font-size:.88rem;font-weight:600;text-align:center;padding:3px 4px;">
+      <td><input type="number" id="vt_summary_total_${ps}"
+            value="${enrolledFromVoters}"
+            readonly tabindex="-1"
+            style="width:100%;border:none;background:#f0f4ff;font-family:Arial,sans-serif;
+                   font-size:.88rem;font-weight:700;text-align:center;padding:3px 4px;
+                   color:#1a2e6e;pointer-events:none;"
+            placeholder="—">
       </td>
       <td><input type="number" id="vt_summary_cast_${ps}" readonly tabindex="-1"
             placeholder="Auto"
@@ -1525,16 +1780,6 @@ function initVTSummary() {
                    color:var(--green);pointer-events:none;">
       </td>`;
     tbody.appendChild(tr);
-
-    const enrolledInp = document.getElementById(`vt_summary_total_${ps}`);
-    if (storedEnrolled) enrolledInp.value = storedEnrolled;
-    enrolledInp.addEventListener('input', () => {
-      pushUndo(totalKey, ld(totalKey, ''));
-      sv(totalKey, enrolledInp.value);
-      showSavedGlobal();
-      calcVTSummaryRow(ps);
-    });
-    // populate cast from already-computed TOTAL row
     calcVTSummaryRow(ps);
   });
 }
@@ -1595,8 +1840,14 @@ function buildVTMobileRows(ps){
 }
 
 function initPage9(){
-  const GROUP1 = SUBS.slice(0,4); // 217,218,219,233
-  const GROUP2 = SUBS.slice(4);   // 234,235,238,239
+  if (SUBS.length === 0) {
+    noPSNotice('vtDesktopBody1');
+    noPSNotice('vtDesktopBody2');
+    noPSNotice('vtSummaryBody');
+    return;
+  }
+  const GROUP1 = SUBS.slice(0, Math.ceil(SUBS.length / 2));
+  const GROUP2 = SUBS.slice(Math.ceil(SUBS.length / 2));
 
   function buildVTDesktopTable(group, headPSId, headSubId, tbodyId) {
     const hPS  = document.getElementById(headPSId);
@@ -1620,7 +1871,7 @@ function initPage9(){
           const td = document.createElement('td');
           const key = vtKey(ps,t,col); const isRo = col==='Tot';
           const inp = makeVTInput(key, isRo, 'ro-tot');
-          if (!isRo) { inp.dataset.key = key; bindField(inp, 10, () => { calcVTRow(ps,t); calcVTCols(ps); }); }
+          if (!isRo) { inp.dataset.key = key; bindField(inp, 11, () => { calcVTRow(ps,t); calcVTCols(ps); }); }
           td.appendChild(inp); tr.appendChild(td);
         });
       });
@@ -1665,7 +1916,7 @@ function initPage11() {
   document.querySelectorAll('#rptChecklist li').forEach(li => {
     const idx = li.dataset.idx, cb = li.querySelector('input');
     cb.dataset.key = 'rpt_'+idx; cb.name = 'rpt_'+idx;
-    bindField(cb, 11, updateRptProgress);
+    bindField(cb, 12, updateRptProgress);
     li.addEventListener('click', e => { if(e.target!==cb){cb.checked=!cb.checked; cb.dispatchEvent(new Event('change'));} });
   });
   updateRptProgress();
@@ -1770,7 +2021,8 @@ function refreshPrintMirrors() {
 const NO_ADD_DELETE = new Set([
   'votersTbody','prePollBody','pollEveBody','evmBody','evmDepBody',
   'chgMockBody','chgActualBody','mockBody','actualBody','endPollBody',
-  'vtDesktopBody1','vtDesktopBody2','vtMobileBody','vtSummaryBody'
+  'vtDesktopBody1','vtDesktopBody2','vtMobileBody','vtSummaryBody',
+  'sectorPSBody'
 ]);
 
 function makeDeleteBtn(row) {
@@ -1872,6 +2124,8 @@ function initAddDeleteRows() {
 // ── BOOT ──────────────────────────────────────────────────────────────────────
 buildProgress();
 updateProgress();
+initSectorPage();
+refreshSUBS(); // Load PS list from sector page before initializing dependent pages
 initPage1();
 initPage2();
 initPage3();
@@ -1880,8 +2134,8 @@ initChecklist('prePollBody', PRE_POLL_ITEMS, 'pp', 4);
 initChecklist('pollEveBody', POLL_EVE_ITEMS, 'pe', 5);
 initPage7();
 initPage8();
-initMockPage('actualHead',  'actualBody',  'actualCards',  ACTUAL_POLL_ROWS, 8);
-initMockPage('endPollHead', 'endPollBody', 'endPollCards', END_POLL_ROWS,    9);
+initMockPage('actualHead',  'actualBody',  'actualCards',  ACTUAL_POLL_ROWS, 9);
+initMockPage('endPollHead', 'endPollBody', 'endPollCards', END_POLL_ROWS,    10);
 initPage9();
 initVTSummary();
 initPage11();

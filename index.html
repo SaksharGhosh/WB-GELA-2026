@@ -1150,7 +1150,7 @@ function makeSectorPSRow(slNum) {
   if (storedName) ta.value = storedName;
   const resize = () => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; };
   ta.addEventListener('input', () => { resize(); pushUndo(nameKey, ld(nameKey,'')); sv(nameKey, ta.value); showSaved(0); refreshSUBS(); });
-  setTimeout(resize, 0);
+  requestAnimationFrame(resize);
   tdName.appendChild(ta);
 
   const delBtn = document.createElement('button');
@@ -1188,7 +1188,7 @@ function initSectorPage() {
     if (stored) ta.value = stored;
     const resize = () => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; };
     ta.addEventListener('input', () => { resize(); pushUndo(key, ld(key,'')); sv(key, ta.value); showSaved(0); });
-    setTimeout(resize, 0);
+    requestAnimationFrame(resize);
   });
 
   // Restore PS rows from localStorage
@@ -1316,7 +1316,7 @@ function buildAMFTable(ps, visitId) {
         sv(name, ta.value);
         showSaved(3);
       });
-      setTimeout(resize, 0);
+      requestAnimationFrame(resize);
 
     } else if (item === 'Building Type') {
       // Govt. / Private radio
@@ -1442,8 +1442,9 @@ function renderAMFVisit(visitId, date, collapsed) {
   const storedRem = ld(remKey, null);
   if (storedRem) remTa.value = storedRem;
 
-  // Auto-resize on screen
+  // Auto-resize on screen — use rAF to ensure value is painted before measuring
   const resizeRem = () => { remTa.style.height = 'auto'; remTa.style.height = remTa.scrollHeight + 'px'; };
+  requestAnimationFrame(resizeRem);
   remTa.addEventListener('input', () => {
     resizeRem();
     sv(remKey, remTa.value);
@@ -1452,7 +1453,6 @@ function renderAMFVisit(visitId, date, collapsed) {
     const mirror = remTa.nextElementSibling;
     if (mirror && mirror.classList.contains('print-mirror')) mirror.textContent = remTa.value;
   });
-  setTimeout(resizeRem, 0);
 
   // Inject a print mirror span right after the textarea
   const mirror = document.createElement('span');
@@ -1990,10 +1990,27 @@ function initRemarks() {
     const val = ld(key, null);
     if (val !== null) el.value = val;
     el.addEventListener('input', () => {
+      // Auto-resize if overflow:hidden style (auto-expand textarea)
+      if (el.style.overflow === 'hidden') {
+        el.style.height = 'auto';
+        el.style.height = el.scrollHeight + 'px';
+      }
       pushUndo(key, ld(key, ''));
       sv(key, el.value);
       showSavedGlobal();
     });
+  });
+}
+
+// ── RESIZE ALL AUTO-EXPANDING TEXTAREAS ──────────────────────────────────────
+function resizeAllTextareas() {
+  document.querySelectorAll('textarea').forEach(ta => {
+    // Only resize those with overflow:hidden (auto-expand type)
+    const style = ta.style.overflow || window.getComputedStyle(ta).overflow;
+    if (style === 'hidden' || ta.classList.contains('ltext-long')) {
+      ta.style.height = 'auto';
+      ta.style.height = ta.scrollHeight + 'px';
+    }
   });
 }
 
@@ -2170,8 +2187,17 @@ initPage11();
 initRemarks();
 initAddDeleteRows();
 refreshPrintMirrors();
+// Resize all auto-expanding textareas after values are fully restored
+// Use requestAnimationFrame to ensure layout is complete before measuring
+requestAnimationFrame(() => {
+  resizeAllTextareas();
+  refreshPrintMirrors();
+});
 // Re-sync mirrors just before printing to catch any last changes
-window.addEventListener('beforeprint', refreshPrintMirrors);
+window.addEventListener('beforeprint', () => {
+  resizeAllTextareas();
+  refreshPrintMirrors();
+});
 </script>
 
 <!-- ══ PWA: INSTALL PROMPT BANNER ══ -->

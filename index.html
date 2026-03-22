@@ -107,6 +107,24 @@
   table.data input:focus, table.data select:focus { background: #fffbf0; outline: 1px solid var(--gold); }
   table.data input.ltext, table.data select.ltext { text-align: left; font-family: Arial, sans-serif; font-size: 1rem; font-weight: 600; }
   /* Auto-expanding textarea only for fields that need long text */
+  /* ── AUTO-SIZING TEXTAREAS (all types) ── */
+  textarea.ta-auto, table.data textarea.ltext-long, .amf-visit-body textarea,
+  .card textarea[data-key^="remarks"], textarea[data-key^="sector_"],
+  textarea[data-key^="amf_remarks"] {
+    /* Modern browsers: content-based sizing */
+    field-sizing: content;
+    /* Fallback: min-height shows at least 1 row, height auto-adjusts */
+    min-height: 2em;
+    height: auto;
+    overflow: hidden;
+    resize: none;
+    width: 100%;
+    box-sizing: border-box;
+    word-break: break-word;
+    white-space: pre-wrap;
+    display: block;
+  }
+
   table.data textarea.ltext-long {
     border: none; background: transparent;
     font-family: Arial, sans-serif; font-size: .88rem; font-weight: 600;
@@ -317,6 +335,7 @@
     input, select { display: none !important; }
     textarea {
       display: block !important;
+      field-sizing: content;
       border: none !important; background: transparent !important;
       padding: 0 !important; font-size: 11pt; font-weight: 600;
       font-family: Arial, sans-serif; width: 100%; resize: none;
@@ -1058,6 +1077,9 @@ function show(p) {
   cur = p;
   updateProgress();
   window.scrollTo({top:0, behavior:'smooth'});
+  // Resize textareas on the now-visible page
+  const activePage = document.querySelector('.page.active');
+  if (activePage) requestAnimationFrame(() => resizePageTextareas(activePage));
 }
 function nextPage() { if (cur < pages.length-1) show(cur+1); }
 function prevPage() { if (cur > 0) show(cur-1); }
@@ -1148,9 +1170,9 @@ function makeSectorPSRow(slNum) {
   ta.style.cssText = 'width:100%;border:none;background:transparent;font-family:Arial,sans-serif;font-size:.88rem;font-weight:600;resize:none;overflow:hidden;min-height:1.8em;height:auto;line-height:1.4;display:block;word-break:break-word;box-sizing:border-box;';
   const storedName = ld(nameKey, '');
   if (storedName) ta.value = storedName;
-  const resize = () => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; };
+  const resize = () => resizeTA(ta);
   ta.addEventListener('input', () => { resize(); pushUndo(nameKey, ld(nameKey,'')); sv(nameKey, ta.value); showSaved(0); refreshSUBS(); });
-  requestAnimationFrame(resize);
+  resizeTA(ta);
   tdName.appendChild(ta);
 
   const delBtn = document.createElement('button');
@@ -1186,9 +1208,8 @@ function initSectorPage() {
     if (!ta) return;
     const stored = ld(key, '');
     if (stored) ta.value = stored;
-    const resize = () => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; };
-    ta.addEventListener('input', () => { resize(); pushUndo(key, ld(key,'')); sv(key, ta.value); showSaved(0); });
-    requestAnimationFrame(resize);
+    ta.addEventListener('input', () => { resizeTA(ta); pushUndo(key, ld(key,'')); sv(key, ta.value); showSaved(0); });
+    resizeTA(ta);
   });
 
   // Restore PS rows from localStorage
@@ -1309,14 +1330,14 @@ function buildAMFTable(ps, visitId) {
       const stored = ld(name, null);
       if (stored) ta.value = stored;
       tr.cells[1].appendChild(ta);
-      const resize = () => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; };
+      const resize = () => resizeTA(ta);
       ta.addEventListener('input', () => {
         resize();
         pushUndo(name, ld(name,''));
         sv(name, ta.value);
         showSaved(3);
       });
-      requestAnimationFrame(resize);
+      resizeTA(ta);
 
     } else if (item === 'Building Type') {
       // Govt. / Private radio
@@ -1443,8 +1464,8 @@ function renderAMFVisit(visitId, date, collapsed) {
   if (storedRem) remTa.value = storedRem;
 
   // Auto-resize on screen — use rAF to ensure value is painted before measuring
-  const resizeRem = () => { remTa.style.height = 'auto'; remTa.style.height = remTa.scrollHeight + 'px'; };
-  requestAnimationFrame(resizeRem);
+  const resizeRem = () => resizeTA(remTa);
+  resizeTA(remTa);
   remTa.addEventListener('input', () => {
     resizeRem();
     sv(remKey, remTa.value);
@@ -1990,11 +2011,7 @@ function initRemarks() {
     const val = ld(key, null);
     if (val !== null) el.value = val;
     el.addEventListener('input', () => {
-      // Auto-resize if overflow:hidden style (auto-expand textarea)
-      if (el.style.overflow === 'hidden') {
-        el.style.height = 'auto';
-        el.style.height = el.scrollHeight + 'px';
-      }
+      resizeTA(el);
       pushUndo(key, ld(key, ''));
       sv(key, el.value);
       showSavedGlobal();
@@ -2003,15 +2020,35 @@ function initRemarks() {
 }
 
 // ── RESIZE ALL AUTO-EXPANDING TEXTAREAS ──────────────────────────────────────
+function resizeTA(ta) {
+  // Use a clone to measure height without affecting layout
+  const clone = ta.cloneNode(true);
+  clone.style.cssText = [
+    'position:fixed','visibility:hidden','top:-9999px','left:-9999px',
+    'width:' + ta.offsetWidth + 'px',
+    'min-height:0','height:auto','overflow:hidden',
+    'white-space:pre-wrap','word-break:break-word',
+    'font:' + window.getComputedStyle(ta).font,
+    'padding:' + window.getComputedStyle(ta).padding,
+    'border:' + window.getComputedStyle(ta).border,
+    'box-sizing:border-box'
+  ].join(';');
+  clone.value = ta.value;
+  document.body.appendChild(clone);
+  const h = Math.max(clone.scrollHeight, 28);
+  document.body.removeChild(clone);
+  ta.style.height = h + 'px';
+}
+
 function resizeAllTextareas() {
   document.querySelectorAll('textarea').forEach(ta => {
-    // Only resize those with overflow:hidden (auto-expand type)
-    const style = ta.style.overflow || window.getComputedStyle(ta).overflow;
-    if (style === 'hidden' || ta.classList.contains('ltext-long')) {
-      ta.style.height = 'auto';
-      ta.style.height = ta.scrollHeight + 'px';
-    }
+    resizeTA(ta);
   });
+}
+
+function resizePageTextareas(pageEl) {
+  if (!pageEl) return;
+  pageEl.querySelectorAll('textarea').forEach(ta => resizeTA(ta));
 }
 
 // ── PRINT MIRRORS (text wrapping in print) ───────────────────────────────────
@@ -2166,6 +2203,12 @@ function initAddDeleteRows() {
   });
 }
 
+// ── GLOBAL TEXTAREA AUTO-RESIZE ──────────────────────────────────────────────
+// Delegate all textarea input events — no need to bind individually
+document.addEventListener('input', e => {
+  if (e.target.tagName === 'TEXTAREA') resizeTA(e.target);
+});
+
 // ── BOOT ──────────────────────────────────────────────────────────────────────
 buildProgress();
 updateProgress();
@@ -2186,16 +2229,25 @@ initVTSummary();
 initPage11();
 initRemarks();
 initAddDeleteRows();
-refreshPrintMirrors();
-// Resize all auto-expanding textareas after values are fully restored
-// Use requestAnimationFrame to ensure layout is complete before measuring
-requestAnimationFrame(() => {
-  resizeAllTextareas();
-  refreshPrintMirrors();
+
+// Restore all textarea values from localStorage (final authoritative pass)
+document.querySelectorAll('textarea[data-key]').forEach(ta => {
+  const val = ld(ta.dataset.key, null);
+  if (val !== null && val !== '') ta.value = val;
 });
-// Re-sync mirrors just before printing to catch any last changes
+
+// Resize all textareas — run immediately and with delays to catch
+// hidden panels (collapsed AMF visits), fonts loading, etc.
+function finalResize() {
+  document.querySelectorAll('textarea').forEach(ta => resizeTA(ta));
+}
+finalResize();
+setTimeout(finalResize, 150);
+setTimeout(finalResize, 600);
+
+refreshPrintMirrors();
 window.addEventListener('beforeprint', () => {
-  resizeAllTextareas();
+  finalResize();
   refreshPrintMirrors();
 });
 </script>

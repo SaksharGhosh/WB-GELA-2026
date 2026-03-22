@@ -352,6 +352,16 @@
     .amf-visit-header { background: #1a1a2e !important; color: #fff !important; padding: 4pt 8pt; }
     .amf-visit-title { font-size: 11pt; font-weight: 700; }
     .amf-visit-body { padding: 5pt 5pt 3pt; }
+    .amf-visit-body textarea {
+      display: block !important;
+      white-space: pre-wrap !important; word-break: break-word !important;
+      overflow-wrap: break-word !important; overflow: visible !important;
+      height: auto !important; min-height: 0 !important;
+      width: 100% !important; border: none !important;
+      background: transparent !important; padding: 0 !important;
+      font-size: 11pt !important; font-weight: 600 !important;
+      font-family: Arial, sans-serif !important;
+    }
     .amf-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4pt; margin-bottom: 5pt; }
     .amf-pair .card { margin-bottom: 0; }
 
@@ -1418,11 +1428,11 @@ function renderAMFVisit(visitId, date, collapsed) {
   remCard.style.cssText = 'margin-top:8px;padding:12px 16px;';
   remCard.innerHTML = `
     <div class="card-title" style="font-size:.95rem;font-weight:700;margin-bottom:8px;">Remarks for this Visit</div>
-    <textarea data-key="${remKey}" rows="3" placeholder="Add remarks for this visit…"
+    <textarea data-key="${remKey}" rows="1" placeholder="Add remarks for this visit…"
       style="width:100%;border:1px solid var(--border);border-radius:3px;background:var(--paper);
              font-family:Arial,sans-serif;font-size:1rem;font-weight:600;color:var(--ink);
-             padding:8px 10px;resize:vertical;transition:border-color .15s;box-sizing:border-box;
-             white-space:pre-wrap;word-break:break-word;"
+             padding:8px 10px;resize:none;transition:border-color .15s;box-sizing:border-box;
+             overflow:hidden;min-height:2.4em;height:auto;white-space:pre-wrap;word-break:break-word;"
       onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 2px rgba(139,26,26,.1)'"
       onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"
     ></textarea>`;
@@ -1431,7 +1441,25 @@ function renderAMFVisit(visitId, date, collapsed) {
   const remTa = remCard.querySelector('textarea');
   const storedRem = ld(remKey, null);
   if (storedRem) remTa.value = storedRem;
-  remTa.addEventListener('input', () => { sv(remKey, remTa.value); showSaved(3); });
+
+  // Auto-resize on screen
+  const resizeRem = () => { remTa.style.height = 'auto'; remTa.style.height = remTa.scrollHeight + 'px'; };
+  remTa.addEventListener('input', () => {
+    resizeRem();
+    sv(remKey, remTa.value);
+    showSaved(3);
+    // Update print mirror
+    const mirror = remTa.nextElementSibling;
+    if (mirror && mirror.classList.contains('print-mirror')) mirror.textContent = remTa.value;
+  });
+  setTimeout(resizeRem, 0);
+
+  // Inject a print mirror span right after the textarea
+  const mirror = document.createElement('span');
+  mirror.className = 'print-mirror';
+  mirror.style.cssText = 'white-space:pre-wrap;word-break:break-word;display:none;';
+  mirror.textContent = storedRem || '';
+  remTa.parentNode.insertBefore(mirror, remTa.nextSibling);
 }
 
 function getAMFVisits() {

@@ -273,6 +273,9 @@
   .save-ind { font-size: .7rem; font-family: Arial, sans-serif; color: var(--green); opacity: 0; transition: opacity .3s; }
   .save-ind.on { opacity: 1; }
 
+  .btn-print-page { background: var(--ink); color: var(--paper); border: none; border-radius: 4px; cursor: pointer; transition: all .15s; }
+  .btn-print-page:hover { background: var(--accent); }
+
   .print-mirror, .select-mirror { display: none; }
   .no-print { display: block; }
 
@@ -281,7 +284,7 @@
     @page { size: A4 portrait; margin: 1cm; }
 
     .app-header, .progress-wrap, .buttons, .banner, .vt-mobile, .mock-cards,
-    .btn-undo, .btn-danger, .btn-print, .amf-visit-actions, .amf-visit-chevron,
+    .btn-undo, .btn-danger, .amf-visit-actions, .amf-visit-chevron,
     .save-ind, .save-global, .no-print, .row-del-td, .del-th, .add-row-wrap { display: none !important; }
 
     .vt-desktop { display: block !important; overflow: visible !important; }
@@ -472,7 +475,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(0)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save0">✓ Saved</span><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save0">✓ Saved</span><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(0)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -509,7 +512,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(1)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save1">✓ Saved</span><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save1">✓ Saved</span><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(1)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -541,7 +544,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(2)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save2">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save2">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(2)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -573,7 +576,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"></div>
-    <div class="btn-group"><span class="save-ind" id="save3">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save3">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(3)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -618,7 +621,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(4)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save4">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save4">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(4)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -643,7 +646,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(5)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save5">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save5">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(5)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -668,7 +671,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(6)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save6">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save6">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(6)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -735,7 +738,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(7)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save7">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save7">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(7)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -761,7 +764,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(8)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save8">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save8">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(8)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -787,7 +790,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(9)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save9">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save9">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(9)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -813,7 +816,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(10)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save10">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save10">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(10)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -887,7 +890,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetVT()">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save11">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button></div>
+    <div class="btn-group"><span class="save-ind" id="save11">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-primary" onclick="nextPage()">Next →</button><button type="button" class="btn btn-print-page no-print" onclick="printPage(11)" title="Print this section only">🖨 This Page</button></div>
   </div>
 </div>
 
@@ -921,7 +924,7 @@
   </div>
   <div class="buttons">
     <div class="btn-group"><button type="button" class="btn btn-danger" onclick="resetPage(12)">↺ Reset</button></div><button type="button" class="btn btn-undo" onclick="undoLast()">↩ Undo</button>
-    <div class="btn-group"><span class="save-ind" id="save12">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-print" onclick="window.print()">🖨 Print / Save PDF</button></div>
+    <div class="btn-group"><span class="save-ind" id="save12">✓ Saved</span><button type="button" class="btn btn-secondary" onclick="prevPage()">← Prev</button><button type="button" class="btn btn-print no-print" onclick="printPage(12)">🖨 This Page</button><button type="button" class="btn btn-print no-print" onclick="window.print()">🖨 Full Document</button></div>
   </div>
 </div>
 
@@ -2234,6 +2237,26 @@ function initAddDeleteRows() {
       card.appendChild(buildAddRowBtn(tbody, pgIdx));
     }
   });
+}
+
+// ── SINGLE PAGE PRINT ────────────────────────────────────────────────────────
+function printPage(pgIdx) {
+  // Inject a temporary style that hides all pages except the target
+  const styleId = '__single_page_print__';
+  let el = document.getElementById(styleId);
+  if (!el) {
+    el = document.createElement('style');
+    el.id = styleId;
+    document.head.appendChild(el);
+  }
+  el.textContent = `@media print { .page { display: none !important; } .page[data-page="${pgIdx}"] { display: block !important; } .page[data-page="${pgIdx}"] table { break-inside: avoid !important; } .page[data-page="${pgIdx}"] tr { break-inside: avoid !important; } .page[data-page="${pgIdx}"] th, .page[data-page="${pgIdx}"] td { break-inside: avoid !important; } }`;
+
+  finalResize();
+  refreshPrintMirrors();
+  window.print();
+
+  // Remove the override after printing
+  setTimeout(() => { el.textContent = ''; }, 500);
 }
 
 // ── GLOBAL TEXTAREA AUTO-RESIZE ──────────────────────────────────────────────

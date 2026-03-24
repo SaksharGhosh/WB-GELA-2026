@@ -1556,37 +1556,61 @@ function initPage3() {
 }
 
 // ── PAGE 4: CONTACTS ──────────────────────────────────────────────────────────
-function addGeneralRow() {
-  const tbody = document.getElementById('generalTbody');
-  const idx = Date.now();
+function buildGeneralRow(idx) {
   const roleKey = `c_general_role_${idx}`;
   const nameKey = `c_general_name_${idx}`;
   const numKey  = `c_general_num_${idx}`;
   const tr = document.createElement('tr');
+  tr.dataset.generalIdx = idx;
   tr.innerHTML = `
     <td><input type="text" data-key="${roleKey}" class="ltext" placeholder="Role"></td>
     <td><input type="text" data-key="${nameKey}" class="ltext" placeholder="Name"></td>
     <td><input type="text" data-key="${numKey}"  class="ltext" placeholder="Number"></td>
     <td class="row-del-td no-print" style="text-align:center;padding:3px;border:1px solid var(--border);">
-      <button type="button" onclick="delGeneralRow(this)" style="background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;">✕</button>
+      <button type="button" onclick="delGeneralRow(this,'${idx}')" style="background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;">✕</button>
     </td>`;
+  return tr;
+}
+
+function addGeneralRow() {
+  const tbody = document.getElementById('generalTbody');
+  const idx = Date.now();
+  // Save this row's idx to the list
+  const rows = ld('general_extra_rows', []);
+  rows.push(idx);
+  sv('general_extra_rows', rows);
+
+  const tr = buildGeneralRow(idx);
   tbody.appendChild(tr);
   tr.querySelectorAll('input').forEach(el => bindField(el, 4));
   refreshPrintMirrors();
 }
 
-function delGeneralRow(btn) {
+function delGeneralRow(btn, idx) {
   if (!confirm('Delete this row?')) return;
   const row = btn.closest('tr');
+  // Remove from persisted list
+  const rows = ld('general_extra_rows', []).filter(i => String(i) !== String(idx));
+  sv('general_extra_rows', rows);
+  // Clear stored values
   row.querySelectorAll('[data-key]').forEach(el => sv(el.dataset.key, ''));
   row.remove();
 }
 
 function initPage4() {
-  // Bind General section inputs (role, name, number for existing rows)
+  // Bind static General section inputs
   document.querySelectorAll('#generalTbody input[data-key]').forEach(el => bindField(el, 4));
   // Also bind other static page-4 inputs
   document.querySelectorAll('[data-page="4"] input[data-key]').forEach(el => bindField(el, 4));
+
+  // Restore extra general rows from localStorage
+  const extraRows = ld('general_extra_rows', []);
+  const tbody = document.getElementById('generalTbody');
+  extraRows.forEach(idx => {
+    const tr = buildGeneralRow(idx);
+    tbody.appendChild(tr);
+    tr.querySelectorAll('input').forEach(el => bindField(el, 4));
+  });
 
   // Venue table: Category (rowspan=2) | Nimta Jibantosh | Nimta High
   // Sub-rows: Name row, then Number row per category
@@ -2170,6 +2194,57 @@ function addDeleteBtnToRow(row) {
   row.appendChild(td);
 }
 
+function buildExtraRowKey(tbodyId) {
+  return `extra_rows_${tbodyId}`;
+}
+
+function saveExtraRow(tbodyId, ts) {
+  const list = ld(buildExtraRowKey(tbodyId), []);
+  if (!list.includes(ts)) { list.push(ts); sv(buildExtraRowKey(tbodyId), list); }
+}
+
+function removeExtraRow(tbodyId, ts) {
+  const list = ld(buildExtraRowKey(tbodyId), []).filter(t => String(t) !== String(ts));
+  sv(buildExtraRowKey(tbodyId), list);
+}
+
+function addExtraRow(tbody, template, pgIdx, ts) {
+  ts = ts || Date.now();
+  const newRow = template.cloneNode(true);
+  // Assign new unique keys
+  newRow.querySelectorAll('input,select,textarea').forEach((el, i) => {
+    const oldKey = el.dataset.key || el.name || '';
+    const newKey = `extra_${tbody.id}_${ts}_${i}`;
+    el.dataset.key = newKey;
+    if (el.name) el.name = newKey;
+    if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+    else { const stored = ld(newKey, null); el.value = stored !== null ? stored : ''; }
+    const handler = () => { sv(newKey, el.type==='checkbox'||el.type==='radio'?el.checked:el.value); showSaved(pgIdx); };
+    el.addEventListener('change', handler);
+    el.addEventListener('input', handler);
+  });
+  // Clear print mirrors/delete buttons from clone
+  newRow.querySelectorAll('.print-mirror,.select-mirror,.row-del-td').forEach(el => el.remove());
+  // Add delete button that also removes from storage
+  const td = document.createElement('td');
+  td.className = 'row-del-td';
+  td.style.cssText = 'width:30px;text-align:center;padding:3px;border:1px solid var(--border);';
+  const delBtn = document.createElement('button');
+  delBtn.type = 'button'; delBtn.textContent = '✕';
+  delBtn.style.cssText = 'background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;';
+  delBtn.onclick = () => {
+    if (!confirm('Delete this row?')) return;
+    newRow.querySelectorAll('[data-key]').forEach(el => sv(el.dataset.key, ''));
+    removeExtraRow(tbody.id, ts);
+    newRow.remove();
+  };
+  td.appendChild(delBtn);
+  newRow.appendChild(td);
+  tbody.appendChild(newRow);
+  refreshPrintMirrors();
+  return newRow;
+}
+
 function buildAddRowBtn(tbody, pgIdx) {
   const wrap = document.createElement('div');
   wrap.className = 'add-row-wrap no-print';
@@ -2179,32 +2254,13 @@ function buildAddRowBtn(tbody, pgIdx) {
   btn.textContent = '+ Add Row';
   btn.style.cssText = 'background:var(--paper);border:1px dashed var(--border);color:var(--ink-light);border-radius:4px;padding:5px 14px;cursor:pointer;font-size:.8rem;font-weight:600;font-family:Arial,sans-serif;';
   btn.onclick = () => {
-    // Clone the last data row (not a separator/header row)
     const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('amf-sep') && r.cells.length > 0);
     if (rows.length === 0) return;
-    const template = rows[rows.length - 1];
-    const newRow = template.cloneNode(true);
+    // Use the first row (original template) to clone structure
+    const template = rows[0];
     const ts = Date.now();
-    // Clear values and assign new keys
-    newRow.querySelectorAll('input,select,textarea').forEach((el, i) => {
-      const oldKey = el.dataset.key || el.name || '';
-      const newKey = oldKey ? oldKey + '_extra_' + ts + '_' + i : 'extra_' + tbody.id + '_' + ts + '_' + i;
-      el.dataset.key = newKey;
-      if (el.name) el.name = newKey;
-      if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
-      else el.value = '';
-      // Re-bind save
-      const handler = () => { sv(newKey, el.type==='checkbox'||el.type==='radio'?el.checked:el.value); showSaved(pgIdx); };
-      el.addEventListener('change', handler);
-      el.addEventListener('input', handler);
-    });
-    // Clear print mirrors from clone
-    newRow.querySelectorAll('.print-mirror,.select-mirror,.row-del-td').forEach(el => el.remove());
-    // Add delete button
-    addDeleteBtnToRow(newRow);
-    tbody.appendChild(newRow);
-    // Re-inject print mirrors for the new row
-    refreshPrintMirrors();
+    saveExtraRow(tbody.id, ts);
+    addExtraRow(tbody, template, pgIdx, ts);
   };
   wrap.appendChild(btn);
   return wrap;
@@ -2213,20 +2269,21 @@ function buildAddRowBtn(tbody, pgIdx) {
 function initAddDeleteRows() {
   document.querySelectorAll('table.data tbody').forEach(tbody => {
     if (!tbody.id || NO_ADD_DELETE.has(tbody.id)) return;
-    // Add delete button to existing rows
+
+    // Add delete button to existing static rows
     tbody.querySelectorAll('tr').forEach(row => {
       if (!row.classList.contains('amf-sep') && row.cells.length > 0) {
         addDeleteBtnToRow(row);
       }
     });
-    // Find the page index from closest .page ancestor
+
     const page = tbody.closest('[data-page]');
     const pgIdx = page ? parseInt(page.dataset.page) : 0;
-    // Add the "+ Add Row" button after the table's parent card
     const table = tbody.closest('table');
     const card = table ? table.closest('.card') : null;
+
     if (card) {
-      // Add delete col header if thead exists
+      // Add delete col header
       const thead = table.querySelector('thead tr:last-child');
       if (thead && !thead.querySelector('.del-th')) {
         const th = document.createElement('th');
@@ -2235,6 +2292,17 @@ function initAddDeleteRows() {
         thead.appendChild(th);
       }
       card.appendChild(buildAddRowBtn(tbody, pgIdx));
+    }
+
+    // Restore previously added extra rows from localStorage
+    const storedRows = ld(buildExtraRowKey(tbody.id), []);
+    if (storedRows.length > 0) {
+      const staticRows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('amf-sep') && r.cells.length > 0);
+      if (staticRows.length > 0) {
+        storedRows.forEach(ts => {
+          addExtraRow(tbody, staticRows[0], pgIdx, ts);
+        });
+      }
     }
   });
 }

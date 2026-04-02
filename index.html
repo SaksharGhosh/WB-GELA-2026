@@ -2211,9 +2211,25 @@ function removeExtraRow(tbodyId, ts) {
 function addExtraRow(tbody, template, pgIdx, ts) {
   ts = ts || Date.now();
   const newRow = template.cloneNode(true);
-  // Assign new unique keys
+
+  // For venueTbody: replace the static category cell (rowspan=2) with an editable input
+  if (tbody.id === 'venueTbody') {
+    const catCell = newRow.querySelector('td[rowspan]');
+    if (catCell) {
+      const catKey = `extra_${tbody.id}_${ts}_cat`;
+      const stored = ld(catKey, '');
+      catCell.innerHTML = `<input type="text" data-key="${catKey}" class="ltext" placeholder="Category" style="font-size:.85rem;font-weight:700;color:var(--accent);">`;
+      const inp = catCell.querySelector('input');
+      inp.value = stored;
+      const h = () => { sv(catKey, inp.value); showSaved(pgIdx); };
+      inp.addEventListener('change', h);
+      inp.addEventListener('input', h);
+    }
+  }
+
+  // Assign new unique keys to all remaining inputs
   newRow.querySelectorAll('input,select,textarea').forEach((el, i) => {
-    const oldKey = el.dataset.key || el.name || '';
+    if (el.dataset.key && el.dataset.key.endsWith('_cat')) return; // already handled above
     const newKey = `extra_${tbody.id}_${ts}_${i}`;
     el.dataset.key = newKey;
     if (el.name) el.name = newKey;
@@ -2223,9 +2239,10 @@ function addExtraRow(tbody, template, pgIdx, ts) {
     el.addEventListener('change', handler);
     el.addEventListener('input', handler);
   });
+
   // Clear print mirrors/delete buttons from clone
   newRow.querySelectorAll('.print-mirror,.select-mirror,.row-del-td').forEach(el => el.remove());
-  // Add delete button that also removes from storage
+  // Add delete button
   const td = document.createElement('td');
   td.className = 'row-del-td';
   td.style.cssText = 'width:30px;text-align:center;padding:3px;border:1px solid var(--border);';
@@ -2235,6 +2252,7 @@ function addExtraRow(tbody, template, pgIdx, ts) {
   delBtn.onclick = () => {
     if (!confirm('Delete this row?')) return;
     newRow.querySelectorAll('[data-key]').forEach(el => sv(el.dataset.key, ''));
+    sv(`extra_${tbody.id}_${ts}_cat`, '');
     removeExtraRow(tbody.id, ts);
     newRow.remove();
   };

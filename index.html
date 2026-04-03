@@ -1597,6 +1597,69 @@ function delGeneralRow(btn, idx) {
   row.remove();
 }
 
+function addVenueRow(vb, pgIdx, ts) {
+  ts = ts || Date.now();
+  const isNew = !ld(`extra_rows_venueTbody`, []).includes(ts) && !ld(`extra_rows_venueTbody`, []).includes(String(ts));
+  if (isNew) saveExtraRow('venueTbody', ts);
+
+  const catKey = `venue_extra_cat_${ts}`;
+
+  // Name row — category cell (rowspan=2) + name inputs per venue
+  const trN = document.createElement('tr');
+  const catStored = ld(catKey, '');
+  trN.innerHTML = `
+    <td rowspan="2" style="font-size:.85rem;font-family:Arial,sans-serif;font-weight:700;vertical-align:middle;background:var(--check-bg);border-right:2px solid var(--border);">
+      <input type="text" data-key="${catKey}" class="ltext" placeholder="Category" style="font-weight:700;color:var(--accent);">
+    </td>
+    ${VENUES.map((v, vi) => {
+      const k = `venue_extra_${ts}_name_${vi}`;
+      return `<td><div style="font-size:.62rem;font-family:Arial,sans-serif;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Name</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter name"></td>`;
+    }).join('')}`;
+  vb.appendChild(trN);
+
+  // Restore category value
+  const catInp = trN.querySelector(`[data-key="${catKey}"]`);
+  if (catInp) { catInp.value = catStored; bindField(catInp, pgIdx); }
+
+  // Number row
+  const trNum = document.createElement('tr');
+  trNum.innerHTML = VENUES.map((v, vi) => {
+    const k = `venue_extra_${ts}_num_${vi}`;
+    return `<td style="border-top:1px dashed var(--border);"><div style="font-size:.62rem;font-family:Arial,sans-serif;color:var(--ink-light);font-weight:700;margin-bottom:2px;">Number</div><input type="text" data-key="${k}" class="ltext" placeholder="Enter number"></td>`;
+  }).join('');
+  vb.appendChild(trNum);
+
+  // Bind all inputs
+  trN.querySelectorAll('input[data-key]').forEach(el => { if(el !== catInp) bindField(el, pgIdx); });
+  trNum.querySelectorAll('input').forEach(el => bindField(el, pgIdx));
+
+  // Delete button (rowspan=2 on Name row)
+  const delTd = document.createElement('td');
+  delTd.className = 'row-del-td no-print';
+  delTd.rowSpan = 2;
+  delTd.style.cssText = 'width:30px;text-align:center;padding:3px;border:1px solid var(--border);vertical-align:middle;';
+  const delBtn = document.createElement('button');
+  delBtn.type='button'; delBtn.textContent='✕';
+  delBtn.style.cssText='background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;';
+  delBtn.onclick = () => {
+    if (!confirm('Delete this row?')) return;
+    trN.querySelectorAll('[data-key]').forEach(el => sv(el.dataset.key,''));
+    trNum.querySelectorAll('[data-key]').forEach(el => sv(el.dataset.key,''));
+    sv(catKey,'');
+    removeExtraRow('venueTbody', ts);
+    trN.remove(); trNum.remove();
+  };
+  delTd.appendChild(delBtn);
+  trN.appendChild(delTd);
+
+  // Separator
+  const sep = document.createElement('tr');
+  sep.innerHTML = `<td colspan="${1 + VENUES.length + 1}" style="padding:3px;background:var(--paper-dark);"></td>`;
+  vb.appendChild(sep);
+
+  refreshPrintMirrors();
+}
+
 function initPage4() {
   // Bind static General section inputs
   document.querySelectorAll('#generalTbody input[data-key]').forEach(el => bindField(el, 4));
@@ -1647,6 +1710,39 @@ function initPage4() {
     sep.innerHTML = `<td colspan="${1 + VENUES.length}" style="padding:3px;background:var(--paper-dark);"></td>`;
     vb.appendChild(sep);
   });
+
+  // Add delete buttons to existing static venue Name rows
+  vb.querySelectorAll('tr').forEach(row => {
+    if (row.querySelector('td[rowspan="2"]') && !row.querySelector('.row-del-td')) {
+      const delTd = document.createElement('td');
+      delTd.className = 'row-del-td no-print';
+      delTd.rowSpan = 2;
+      delTd.style.cssText = 'width:30px;text-align:center;padding:3px;border:1px solid var(--border);vertical-align:middle;';
+      const delBtn = document.createElement('button');
+      delBtn.type='button'; delBtn.textContent='✕';
+      delBtn.style.cssText='background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:3px;padding:2px 7px;cursor:pointer;font-size:.8rem;font-weight:700;';
+      delBtn.onclick = () => {
+        if (!confirm('Delete this row?')) return;
+        const n1=row.nextElementSibling, n2=n1?n1.nextElementSibling:null;
+        row.remove(); n1&&n1.remove(); n2&&n2.remove();
+      };
+      delTd.appendChild(delBtn);
+      row.appendChild(delTd);
+    }
+  });
+
+  // Restore extra venue rows from localStorage
+  ld('extra_rows_venueTbody', []).forEach(ts => addVenueRow(vb, 4, ts));
+
+  // Add "+ Add Row" button for venue table
+  const venueCard = vb.closest('.card');
+  if (venueCard && !venueCard.querySelector('.add-row-wrap')) {
+    const wrap = document.createElement('div');
+    wrap.className = 'add-row-wrap no-print';
+    wrap.style.cssText = 'margin-top:4px;';
+    wrap.innerHTML = `<button type="button" onclick="addVenueRow(document.getElementById('venueTbody'),4)" style="background:var(--paper);border:1px dashed var(--border);color:var(--ink-light);border-radius:4px;padding:5px 14px;cursor:pointer;font-size:.8rem;font-weight:600;font-family:Arial,sans-serif;">+ Add Row</button>`;
+    venueCard.appendChild(wrap);
+  }
 
   // Officers: PS | PrO Name | PrO Number | 1st PO Name | 1st PO Number
   const ob = document.getElementById('officersTbody');
@@ -2164,7 +2260,7 @@ const NO_ADD_DELETE = new Set([
   'votersTbody','prePollBody','pollEveBody','evmBody','evmDepBody',
   'chgMockBody','chgActualBody','mockBody','actualBody','endPollBody',
   'vtDesktopBody1','vtDesktopBody2','vtMobileBody','vtSummaryBody',
-  'sectorPSBody','generalTbody'
+  'sectorPSBody','generalTbody','venueTbody'
 ]);
 
 function makeDeleteBtn(row) {

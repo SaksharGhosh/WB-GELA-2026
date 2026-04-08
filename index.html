@@ -1017,7 +1017,11 @@ const ACTUAL_POLL_ROWS = [
   {key:"ap_bucu",    label:"2. BU & CU replaced during Actual poll"},
   {key:"ap_vvpat",   label:"3. VVPAT replaced during Actual poll"},
   {key:"ap_part5",   label:"4. Part V of PrO report collected"},
-  {key:"ap_power",   label:"5. Power pack of CU replaced"},
+  {key:"ap_power",   label:"5. Power pack of CU replaced", conditionalYes:[
+    {key:"ap_power_cu",      label:"C.U. No."},
+    {key:"ap_power_old_tag", label:"Old Address Tag No."},
+    {key:"ap_power_new_tag", label:"New Address Tag No."},
+  ]},
   {key:"ap_reserve", label:"6. Reserve polling personnel assigned"},
 ];
 const END_POLL_ROWS = [
@@ -1844,6 +1848,7 @@ function initMockPage(headId, tbodyId, cardsId, rows, pgIdx) {
     const tr = document.createElement('tr');
     const labelTd = document.createElement('td'); labelTd.className='item-label'; labelTd.textContent=row.label;
     tr.appendChild(labelTd);
+
     SUBS.forEach(s => {
       const td = document.createElement('td');
       const key = `${row.key}_${s}`;
@@ -1854,6 +1859,146 @@ function initMockPage(headId, tbodyId, cardsId, rows, pgIdx) {
       td.appendChild(el); tr.appendChild(td);
     });
     tbody.appendChild(tr);
+
+    // Build conditional sub-row AFTER all selects for this row exist in DOM
+    if (row.conditionalYes) {
+      const subRow = document.createElement('tr');
+      subRow.className = 'conditional-subrow';
+      subRow.style.cssText = 'background:var(--check-bg);display:none;';
+
+      // Label cell
+      const subLabel = document.createElement('td');
+      subLabel.style.cssText = 'padding:4px 8px;border:1px solid var(--border);font-size:.75rem;font-weight:700;color:var(--ink-light);vertical-align:top;';
+      subLabel.textContent = '↳ Details';
+      subRow.appendChild(subLabel);
+
+      // One cell per PS — use inner wrapper div to hide/show without breaking table layout
+      const psCells = {};
+      SUBS.forEach(s => {
+        const subTd = document.createElement('td');
+        subTd.style.cssText = 'padding:0;border:1px solid var(--border);vertical-align:top;';
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'display:none;padding:6px 8px;';
+        wrapper.dataset.psCell = s;
+        row.conditionalYes.forEach(field => {
+          const fieldKey = `${field.key}_${s}`;
+          const div = document.createElement('div');
+          div.style.marginBottom = '4px';
+          div.innerHTML = `<div style="font-size:.62rem;font-family:Arial,sans-serif;color:var(--ink-light);font-weight:700;margin-bottom:2px;">${field.label}</div>`;
+          const inp = document.createElement('input');
+          inp.type = 'text'; inp.className = 'ltext';
+          inp.dataset.key = fieldKey;
+          inp.placeholder = field.label;
+          inp.style.width = '100%';
+          const stored = ld(fieldKey, '');
+          if (stored) inp.value = stored;
+          bindField(inp, pgIdx);
+          div.appendChild(inp);
+          wrapper.appendChild(div);
+        });
+        subTd.appendChild(wrapper);
+        subRow.appendChild(subTd);
+        psCells[s] = wrapper;
+      });
+
+      tbody.appendChild(subRow);
+
+      // Per-PS visibility: show wrapper only when that PS = Yes
+      // Confirm before hiding if details were filled in
+      const updateVisSingle = (s, newVal, wrapper) => {
+        if (newVal === 'yes') {
+          wrapper.style.display = 'block';
+          subRow.style.display = '';
+        } else {
+          // Check if any detail fields have data
+          const hasData = Array.from(wrapper.querySelectorAll('input')).some(i => i.value.trim());
+          if (hasData) {
+            if (!confirm('You have entered details for this PS. Hide and clear them?')) {
+              // Revert the select back to "yes"
+              const sel = tr.querySelector(`[data-key="${row.key}_${s}"]`);
+              if (sel) { sel.value = 'yes'; sv(`${row.key}_${s}`, 'yes'); }
+              return;
+            }
+            // Clear the detail fields
+            wrapper.querySelectorAll('input').forEach(i => { i.value = ''; sv(i.dataset.key, ''); });
+          }
+          wrapper.style.display = 'none';
+          // Hide whole subRow if no PS is showing
+          const anyVisible = SUBS.some(ps => psCells[ps] && psCells[ps].style.display !== 'none');
+          if (!anyVisible) subRow.style.display = 'none';
+        }
+      };
+
+      // Restore state on load
+      SUBS.forEach(s => {
+        const isYes = ld(`${row.key}_${s}`, '') === 'yes';
+        if (psCells[s]) psCells[s].style.display = isYes ? 'block' : 'none';
+      });
+      const anyYes = SUBS.some(s => ld(`${row.key}_${s}`, '') === 'yes');
+      subRow.style.display = anyYes ? '' : 'none';
+
+      // Bind each desktop select individually
+      SUBS.forEach(s => {
+        const sel = tr.querySelector(`[data-key="${row.key}_${s}"]`);
+        if (sel) {
+          sel.addEventListener('change', () => {
+            setTimeout(() => updateVisSingle(s, sel.value, psCells[s]), 0);
+          });
+        }
+      });
+
+      // Also add conditional fields to mobile cards
+      setTimeout(() => {
+        SUBS.forEach(s => {
+          const mobileKey = `${row.key}_${s}_m`;
+          const mobileCell = cardsWrap.querySelector(`[data-key="${mobileKey}"]`)?.closest('.mock-card-cell');
+          if (!mobileCell) return;
+          const mobileDetails = document.createElement('div');
+          mobileDetails.style.cssText = 'display:none;margin-top:6px;';
+          row.conditionalYes.forEach(field => {
+            const fieldKey = `${field.key}_${s}`;
+            const div = document.createElement('div');
+            div.style.marginBottom = '4px';
+            div.innerHTML = `<div style="font-size:.62rem;font-family:Arial,sans-serif;color:var(--ink-light);font-weight:700;margin-bottom:2px;">${field.label}</div>`;
+            const inp = document.createElement('input');
+            inp.type = 'text'; inp.className = 'ltext';
+            inp.dataset.key = fieldKey;
+            inp.placeholder = field.label;
+            inp.style.width = '100%';
+            const stored = ld(fieldKey, '');
+            if (stored) inp.value = stored;
+            bindField(inp, pgIdx);
+            div.appendChild(inp);
+            mobileDetails.appendChild(div);
+          });
+          mobileCell.appendChild(mobileDetails);
+
+          const mobileSelect = mobileCell.querySelector('select');
+          // Restore
+          if (ld(`${row.key}_${s}`, '') === 'yes') mobileDetails.style.display = 'block';
+
+          if (mobileSelect) {
+            mobileSelect.addEventListener('change', () => {
+              setTimeout(() => {
+                if (mobileSelect.value === 'yes') {
+                  mobileDetails.style.display = 'block';
+                } else {
+                  const hasData = Array.from(mobileDetails.querySelectorAll('input')).some(i => i.value.trim());
+                  if (hasData) {
+                    if (!confirm('You have entered details for this PS. Hide and clear them?')) {
+                      mobileSelect.value = 'yes'; sv(`${row.key}_${s}`, 'yes'); return;
+                    }
+                    mobileDetails.querySelectorAll('input').forEach(i => { i.value = ''; sv(i.dataset.key, ''); });
+                  }
+                  mobileDetails.style.display = 'none';
+                }
+              }, 0);
+            });
+          }
+        });
+      }, 50);
+    }
+
     // mobile card
     const card = document.createElement('div'); card.className='mock-card';
     let cells = SUBS.map(s => {
